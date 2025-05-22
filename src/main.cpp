@@ -8,24 +8,11 @@ volatile bool serial_ready = false;
 static volatile uint64_t timestamp_exit = 0;
 static volatile uint64_t timestamp_enter = 0;
 
-static async_context_threadsafe_background_t asyncCtx;
+static async_context_threadsafe_background_t async_ctx;
 
 uint32_t do_some_work(void *param) {
   const auto value = static_cast<uint32_t *>(param);
   (*value)++;
-  // Log timestamp right before sem_release will happen
-  if (const auto worker = static_cast<async_when_pending_worker *>(
-          asyncCtx.core.when_pending_list)) {
-    Serial1.printf("[INFO][%u][%llu] Pre-sem_release worker state:\n"
-                   "  address: %p\n"
-                   "  next: %p\n"
-                   "  do_work: %p\n"
-                   "  work_pending: %d\n"
-                   "  value: %d\n",
-                   get_core_num(), to_us_since_boot(get_absolute_time()),
-                   worker, worker->next, worker->do_work, worker->work_pending,
-                   *value);
-  }
   return *value;
 }
 
@@ -54,7 +41,7 @@ void setup1() {
   }
   async_context_threadsafe_background_config_t cfg =
       async_context_threadsafe_background_default_config();
-  operational = async_context_threadsafe_background_init(&asyncCtx, &cfg);
+  operational = async_context_threadsafe_background_init(&async_ctx, &cfg);
   assert(operational);
   Serial1.printf("C1 ready...\n");
 }
@@ -63,15 +50,31 @@ void loop() {
   static unsigned long c0_counter = 0;
   static uint32_t ref_counter = 0;
 
-  if (c0_counter % 111 == 0) {
+  if (c0_counter == 55) {
     timestamp_enter = to_us_since_boot(get_absolute_time());
     const auto rc =
-        async_context_execute_sync(&asyncCtx.core, do_some_work, &ref_counter);
+        async_context_execute_sync(&async_ctx.core, do_some_work, &ref_counter);
     assert(rc == ref_counter);
     timestamp_exit = to_us_since_boot(get_absolute_time());
-    Serial1.printf("[INFO][%u][%llu] value: %d; enter: %llu; exit: %llu\n",
-                   get_core_num(), timestamp_exit, rc, timestamp_enter,
-                   timestamp_exit);
+    Serial1.printf("[Counter %d][Enter at: %llu][Exit at: %llu]\n",
+                   rc, timestamp_enter, timestamp_exit);
+  } else if (c0_counter == 77) {
+    timestamp_enter = to_us_since_boot(get_absolute_time());
+    const auto rc =
+        async_context_execute_sync(&async_ctx.core, do_some_work, &ref_counter);
+    assert(rc == ref_counter);
+    timestamp_exit = to_us_since_boot(get_absolute_time());
+    Serial1.printf("[Counter %d][Enter %llu] Exit %llu from boot\n",
+                   rc, timestamp_enter, timestamp_exit);
+  } else if (c0_counter == 111) {
+    timestamp_enter = to_us_since_boot(get_absolute_time());
+    const auto rc =
+        async_context_execute_sync(&async_ctx.core, do_some_work, &ref_counter);
+    assert(rc == ref_counter);
+    timestamp_exit = to_us_since_boot(get_absolute_time());
+    Serial1.printf("Counter %d; Enter %llu, Exit %llu from boot\n",
+                   rc, timestamp_enter, timestamp_exit);
+    c0_counter = 0;
   }
   c0_counter++;
   delay(1);
