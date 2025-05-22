@@ -8,6 +8,6 @@ commands
   set $fault_pc = *((unsigned int *)$sp + 6)
   printf "\nCode around faulting PC (0x%08x):\n", $fault_pc
   disassemble $fault_pc-8, $fault_pc+8
-  bt
+  thread apply all backtrace
   echo \n==========================================\n
 end
