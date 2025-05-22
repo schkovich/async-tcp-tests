@@ -1,0 +1,590 @@
+Preparing firmware for debugging...
+Processing debug (board: nanorp2040connect; framework: arduino; platform: https://github.com/maxgerhardt/platform-raspberrypi.git)
+--------------------------------------------------------------------------------
+Verbose mode can be enabled via `-v, --verbose` option
+CONFIGURATION: https://docs.platformio.org/page/boards/raspberrypi/nanorp2040connect.html
+PLATFORM: Raspberry Pi RP2040 (1.16.0+sha.1f67f1e) > Arduino Nano RP2040 Connect
+HARDWARE: RP2040 133MHz, 256KB RAM, 2MB Flash
+DEBUG: Current (cmsis-dap) External (cmsis-dap, jlink, pico-debug, picoprobe, raspberrypi-swd)
+PACKAGES: 
+ - framework-arduinopico @ 1.40503.0 (4.5.3) 
+ - tool-picotool-rp2040-earlephilhower @ 5.140200.240929 (14.2.0) 
+ - toolchain-rp2040-earlephilhower @ 5.140200.240929 (14.2.0)
+Warning: Undefined USBD_MAX_OWER_MA, assuming 500mA
+Flash size: 2.00MB
+Sketch size: 2.00MB
+Filesystem size: 0.00MB
+PSRAM size: 0.00MB
+Maximium Sketch size: 2093056 EEPROM start: 0x101ff000 Filesystem start: 0x101ff000 Filesystem end: 0x101ff000
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 68 compatible libraries
+Scanning dependencies...
+No dependencies
+Building in debug mode
+Compiling .pio/build/debug/FrameworkArduinoVariant/nina_pins.cpp.o
+Compiling .pio/build/debug/FrameworkArduinoBootloader/boot2_w25q080_2_padded_checksum.S.o
+Compiling .pio/build/debug/src/main.cpp.o
+Generating linkerscript $HOME/CLionProjects/pico-sdk-tests/.pio/build/debug/memmap_default.ld
+Compiling .pio/build/debug/FrameworkArduino/BluetoothDebug.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/Bootsel.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/CoreMutex.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/FS.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/PIOProgram.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/RP2040Support.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/RP2040USB.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/Semihosting.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/SerialPIO.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/SerialUART.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/SerialUSB.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/StackThunk.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/Tone.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/WMath.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/_freertos.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/api/Common.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/api/IPAddress.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/api/PluggableUSB.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/api/Print.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/api/Stream.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/api/String.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/cyw43_wrappers.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/delay.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/gprof_gmon.c.o
+Compiling .pio/build/debug/FrameworkArduino/gprof_shim.S.o
+Compiling .pio/build/debug/FrameworkArduino/libb64/cdecode.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/libb64/cencode.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/lock.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/lwip_wrap.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/main.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/malloc-lock.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/posix.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/psram.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/rp2350-memcpy.S.o
+Compiling .pio/build/debug/FrameworkArduino/sdkoverride/btstack_flash_bank.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/sdkoverride/inet_chksum.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/sdkoverride/newlib_interface.c.o
+Compiling .pio/build/debug/FrameworkArduino/sdkoverride/pico_bootsel_via_double_reset.c.o
+Compiling .pio/build/debug/FrameworkArduino/stdlib_noniso.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/wiring_analog.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/wiring_digital.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/wiring_private.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/wiring_pulse.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/wiring_shift.cpp.o
+Archiving .pio/build/debug/libFrameworkArduino.a
+Indexing .pio/build/debug/libFrameworkArduino.a
+Linking .pio/build/debug/firmware.elf
+Generating UF2 image
+picotool uf2 convert -t elf ".pio/build/debug/firmware.elf" ".pio/build/debug/firmware.uf2"
+Retrieving maximum program size .pio/build/debug/firmware.elf
+Flash size: 2.00MB
+Sketch size: 2.00MB
+Filesystem size: 0.00MB
+PSRAM size: 0.00MB
+Maximium Sketch size: 2093056 EEPROM start: 0x101ff000 Filesystem start: 0x101ff000 Filesystem end: 0x101ff000
+Checking size .pio/build/debug/firmware.elf
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [          ]   3.8% (used 10028 bytes from 262144 bytes)
+Flash: [          ]   3.5% (used 72772 bytes from 2093056 bytes)
+Building .pio/build/debug/firmware.bin
+Building .pio/build/debug/firmware.bin.signed
+========================= [SUCCESS] Took 5.56 seconds =========================
+Reading symbols from $HOME/CLionProjects/pico-sdk-tests/.pio/build/debug/firmware.elf...
+PlatformIO Unified Debugger -> https://bit.ly/pio-debug
+PlatformIO: debug_tool = cmsis-dap
+PlatformIO: Initializing remote target...
+Open On-Chip Debugger 0.12.0+dev-gebec9504d-dirty (2024-09-29-16:26)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+Info : Hardware thread awareness created
+Info : Hardware thread awareness created
+adapter speed: 1000 kHz
+Info : tcl server disabled
+Info : telnet server disabled
+Info : Using CMSIS-DAPv2 interface with VID:PID=0x2e8a:0x000c, serial=E6632891E3688D33
+Info : CMSIS-DAP: SWD supported
+Info : CMSIS-DAP: Atomic commands supported
+Info : CMSIS-DAP: Test domain timer supported
+Info : CMSIS-DAP: FW Version = 2.0.0
+Info : CMSIS-DAP: Interface Initialised (SWD)
+Info : SWCLK/TCK = 0 SWDIO/TMS = 0 TDI = 0 TDO = 0 nTRST = 0 nRESET = 0
+Info : CMSIS-DAP: Interface ready
+Info : clock speed 1000 kHz
+Info : SWD DPIDR 0x0bc12477, DLPIDR 0x00000001
+Info : SWD DPIDR 0x0bc12477, DLPIDR 0x10000001
+Info : [rp2040.core0] Cortex-M0+ r0p1 processor detected
+Info : [rp2040.core0] target has 4 breakpoints, 2 watchpoints
+Info : [rp2040.core0] Examination succeed
+Info : [rp2040.core1] Cortex-M0+ r0p1 processor detected
+Info : [rp2040.core1] target has 4 breakpoints, 2 watchpoints
+Info : [rp2040.core1] Examination succeed
+Info : starting gdb server for rp2040.core0 on pipe
+Info : accepting 'gdb' connection from pipe
+Warn : [rp2040.core0] target was in unknown state when halt was requested
+Warn : [rp2040.core1] target was in unknown state when halt was requested
+Warn : Function FUNC_BOOTROM_STATE_RESET not found in RP2xxx ROM. (probably an RP2040 or an RP2350 A0)
+Warn : Function FUNC_FLASH_RESET_ADDRESS_TRANS not found in RP2xxx ROM. (probably an RP2040 or an RP2350 A0)
+Info : RP2040 Flash Probe: 33554432 bytes @0x10000000, in 8192 sectors
+
+Info : New GDB Connection: 1, Target rp2040.core0, state: halted
+0x1000606a in sleep_until (t=<optimized out>)
+    at $HOME/CLionProjects/arduino-pico/pico-sdk/src/common/pico_time/time.c:408
+408	            while (!time_reached(t_before)) {okay, let's update summary with the latest findings refering to the current state of the code and the logs
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0xf1000000 pc: 0x000000ea msp: 0x20041f00
+[rp2040.core1] halted due to debug-request, current mode: Thread 
+xPSR: 0xf1000000 pc: 0x000000ea msp: 0x20041f00
+Loading section .boot2, size 0x100 lma 0x10000000
+Loading section .ota, size 0x27f4 lma 0x10000100
+Loading section .partition, size 0x70c lma 0x100028f4
+Loading section .text, size 0xf6b4 lma 0x10003000
+Loading section .rodata, size 0x1158 lma 0x100126b8
+Loading section .data, size 0x1338 lma 0x10013810
+Info : Padding image section 0 at 0x100126b4 with 4 bytes
+Info : Padding image section 1 at 0x10014b48 with 184 bytes (bank write end alignment)
+Warn : keep_alive() was not invoked in the 1000 ms timelimit. GDB alive packet not sent! (2518 ms). Workaround: increase "set remotetimeout" in GDB
+Warn : keep_alive() was not invoked in the 1000 ms timelimit. GDB alive packet not sent! (1700 ms). Workaround: increase "set remotetimeout" in GDB
+[rp2040.core0] halted due to breakpoint, current mode: Thread 
+xPSR: 0xf1000000 pc: 0x000000ea msp: 0x20041f00
+[rp2040.core1] halted due to debug-request, current mode: Thread 
+xPSR: 0xf1000000 pc: 0x000000ea msp: 0x20041f00
+Start address 0x100030d4, load size 84804
+Transfer rate: 15 KB/sec, 9422 bytes/write.
+[rp2040.core0] halted due to breakpoint, current mode: Thread 
+xPSR: 0xf1000000 pc: 0x000000ea msp: 0x20041f00
+[rp2040.core1] halted due to debug-request, current mode: Thread 
+xPSR: 0xf1000000 pc: 0x000000ea msp: 0x20041f00
+[rp2040.core0] halted due to breakpoint, current mode: Thread 
+xPSR: 0xf1000000 pc: 0x000000ea msp: 0x20041f00
+[rp2040.core1] halted due to debug-request, current mode: Thread 
+xPSR: 0xf1000000 pc: 0x000000ea msp: 0x20041f00
+Temporary breakpoint 1 at 0x10004008: file $HOME/CLionProjects/arduino-pico/cores/rp2040/main.cpp, line 90.
+Note: automatically using hardware breakpoints for read-only addresses.
+Breakpoint 2 at 0x1000a6d8: file async_context_base.c, line 48.
+Breakpoint 3 at 0x1000a788: file async_context_base.c, line 93.
+Breakpoint 4 at 0x100030c4: file crt0.S, line 170.
+PlatformIO: Initialization completed
+(gdb) PlatformIO: Resume the execution to `debug_init_break = tbreak main`
+PlatformIO: More configuration options -> https://bit.ly/pio-debug
+Continuing.
+[rp2040.core1] halted due to debug-request, current mode: Thread 
+xPSR: 0x01000000 pc: 0x00000184 msp: 0x20041f00
+
+Thread 1 "rp2040.core0" hit Temporary breakpoint 1, main () at main.cpp:90
+90	extern "C" int main() {
+(gdb) Continuing.
+[rp2040.core1] halted due to breakpoint, current mode: Handler External Interrupt(30)
+xPSR: 0x2100002e pc: 0x1000a788 msp: 0x200048b8
+[Switching to Thread 2]
+
+[Cycle: 1] execute once: 0x20041f74
+[INFO] Enter: 418663; Exit: 0
+0x20041f74:	0x00000000	0x1000a529	0x00000001	0x00000000
+$1 = {
+  next = 0x0,
+  do_work = 0x1000a529 <handle_sync_func_call>,
+  work_pending = true,
+  user_data = 0x0
+}
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x10006066 msp: 0x20041f68
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x10006066 msp: 0x20041f68
+
+[Cycle: 1] remove worker: 0x20041f74
+[INFO] Enter: 418663; Exit: 418741
+0x20041f74:	0x00000000	0x1000a529	0x000003e8	0x00000000
+$2 = {
+  next = 0x0,
+  do_work = 0x1000a529 <handle_sync_func_call>,
+  work_pending = 232,
+  user_data = 0x0
+}
+[WARNING] work_pending invalid: 232
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x20000b14 msp: 0x20041f68
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x20000b14 msp: 0x20041f68
+
+[Cycle: 2] execute once: 0x20041f74
+[INFO] Enter: 440800; Exit: 418741
+0x20041f74:	0x00000000	0x1000a529	0x00000001	0x00000000
+$3 = {
+  next = 0x0,
+  do_work = 0x1000a529 <handle_sync_func_call>,
+  work_pending = true,
+  user_data = 0x0
+}
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x10006066 msp: 0x20041f68
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x10006066 msp: 0x20041f68
+
+[Cycle: 2] remove worker: 0x20041f74
+[INFO] Enter: 440800; Exit: 440830
+0x20041f74:	0x00000000	0x1000a529	0x000003e8	0x00000000
+$4 = {
+  next = 0x0,
+  do_work = 0x1000a529 <handle_sync_func_call>,
+  work_pending = 232,
+  user_data = 0x0
+}
+[WARNING] work_pending invalid: 232
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x20000b14 msp: 0x20041f68
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x20000b14 msp: 0x20041f68
+
+[Cycle: 3] execute once: 0x20041f74
+[INFO] Enter: 474932; Exit: 440830
+0x20041f74:	0x00000000	0x1000a529	0x00000001	0x00000000
+$5 = {
+  next = 0x0,
+  do_work = 0x1000a529 <handle_sync_func_call>,
+  work_pending = true,
+  user_data = 0x0
+}
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x10006066 msp: 0x20041f68
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x10006066 msp: 0x20041f68
+
+[Cycle: 3] remove worker: 0x20041f74
+[INFO] Enter: 474932; Exit: 474954
+0x20041f74:	0x00000000	0x1000a529	0x000003e8	0x00000000
+$6 = {
+  next = 0x0,
+  do_work = 0x1000a529 <handle_sync_func_call>,
+  work_pending = 232,
+  user_data = 0x0
+}
+[WARNING] work_pending invalid: 232
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x20000b14 msp: 0x20041f68
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x20000b14 msp: 0x20041f68
+
+[Cycle: 4] execute once: 0x20041f74
+[INFO] Enter: 530232; Exit: 474954
+0x20041f74:	0x00000000	0x1000a529	0x00000001	0x00000000
+$7 = {
+  next = 0x0,
+  do_work = 0x1000a529 <handle_sync_func_call>,
+  work_pending = true,
+  user_data = 0x0
+}
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x10006066 msp: 0x20041f68
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x10006066 msp: 0x20041f68
+
+[Cycle: 4] remove worker: 0x20041f74
+[INFO] Enter: 530232; Exit: 530257
+0x20041f74:	0x00000000	0x1000a529	0x000003e8	0x00000000
+$8 = {
+  next = 0x0,
+  do_work = 0x1000a529 <handle_sync_func_call>,
+  work_pending = 232,
+  user_data = 0x0
+}
+[WARNING] work_pending invalid: 232
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x20000b14 msp: 0x20041f68
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x20000b14 msp: 0x20041f68
+
+[Cycle: 5] execute once: 0x20041f74
+[INFO] Enter: 552304; Exit: 530257
+0x20041f74:	0x00000000	0x1000a529	0x00000001	0x00000000
+$9 = {
+  next = 0x0,
+  do_work = 0x1000a529 <handle_sync_func_call>,
+  work_pending = true,
+  user_data = 0x0
+}
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x10006066 msp: 0x20041f68
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x10006066 msp: 0x20041f68
+
+[Cycle: 5] remove worker: 0x20041f74
+[INFO] Enter: 552304; Exit: 552319
+0x20041f74:	0x00000000	0x1000a529	0x000003e8	0x00000000
+$10 = {
+  next = 0x0,
+  do_work = 0x1000a529 <handle_sync_func_call>,
+  work_pending = 232,
+  user_data = 0x0
+}
+[WARNING] work_pending invalid: 232
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x20000b14 msp: 0x20041f68
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x20000b14 msp: 0x20041f68
+
+[Cycle: 6] execute once: 0x20041f74
+[INFO] Enter: 586389; Exit: 552319
+0x20041f74:	0x00000000	0x1000a529	0x00000001	0x00000000
+$11 = {
+  next = 0x0,
+  do_work = 0x1000a529 <handle_sync_func_call>,
+  work_pending = true,
+  user_data = 0x0
+}
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x10006066 msp: 0x20041f68
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x10006066 msp: 0x20041f68
+
+[Cycle: 6] remove worker: 0x20041f74
+[INFO] Enter: 586389; Exit: 586402
+0x20041f74:	0x00000000	0x1000a529	0x000003e8	0x00000000
+$12 = {
+  next = 0x0,
+  do_work = 0x1000a529 <handle_sync_func_call>,
+  work_pending = 232,
+  user_data = 0x0
+}
+[WARNING] work_pending invalid: 232
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x20000b14 msp: 0x20041f68
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x20000b14 msp: 0x20041f68
+
+[Cycle: 7] execute once: 0x20041f74
+[INFO] Enter: 641515; Exit: 586402
+0x20041f74:	0x00000000	0x1000a529	0x00000001	0x00000000
+$13 = {
+  next = 0x0,
+  do_work = 0x1000a529 <handle_sync_func_call>,
+  work_pending = true,
+  user_data = 0x0
+}
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x10006066 msp: 0x20041f68
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x10006066 msp: 0x20041f68
+
+[Cycle: 7] remove worker: 0x20041f74
+[INFO] Enter: 641515; Exit: 641527
+0x20041f74:	0x00000000	0x1000a529	0x000003e8	0x00000000
+$14 = {
+  next = 0x0,
+  do_work = 0x1000a529 <handle_sync_func_call>,
+  work_pending = 232,
+  user_data = 0x0
+}
+[WARNING] work_pending invalid: 232
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x20000b14 msp: 0x20041f68
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x20000b14 msp: 0x20041f68
+
+[Cycle: 8] execute once: 0x20041f74
+[INFO] Enter: 663577; Exit: 641527
+0x20041f74:	0x00000000	0x1000a529	0x00000001	0x00000000
+$15 = {
+  next = 0x0,
+  do_work = 0x1000a529 <handle_sync_func_call>,
+  work_pending = true,
+  user_data = 0x0
+}
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x10006066 msp: 0x20041f68
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x10006066 msp: 0x20041f68
+
+[Cycle: 8] remove worker: 0x20041f74
+[INFO] Enter: 663577; Exit: 663590
+0x20041f74:	0x00000000	0x1000a529	0x000003e8	0x00000000
+$16 = {
+  next = 0x0,
+  do_work = 0x1000a529 <handle_sync_func_call>,
+  work_pending = 232,
+  user_data = 0x0
+}
+[WARNING] work_pending invalid: 232
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x20000b14 msp: 0x20041f68
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x20000b14 msp: 0x20041f68
+
+[Cycle: 9] execute once: 0x20041f74
+[INFO] Enter: 697660; Exit: 663590
+0x20041f74:	0x00000000	0x1000a529	0x00000001	0x00000000
+$17 = {
+  next = 0x0,
+  do_work = 0x1000a529 <handle_sync_func_call>,
+  work_pending = true,
+  user_data = 0x0
+}
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x10006066 msp: 0x20041f68
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x10006066 msp: 0x20041f68
+
+[Cycle: 9] remove worker: 0x20041f74
+[INFO] Enter: 697660; Exit: 697671
+0x20041f74:	0x00000000	0x1000a529	0x000003e8	0x00000000
+$18 = {
+  next = 0x0,
+  do_work = 0x1000a529 <handle_sync_func_call>,
+  work_pending = 232,
+  user_data = 0x0
+}
+[WARNING] work_pending invalid: 232
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x20000b14 msp: 0x20041f68
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x20000b14 msp: 0x20041f68
+
+[Cycle: 10] execute once: 0x20041f74
+[INFO] Enter: 752785; Exit: 697671
+0x20041f74:	0x00000000	0x1000a529	0x00000001	0x00000000
+$19 = {
+  next = 0x0,
+  do_work = 0x1000a529 <handle_sync_func_call>,
+  work_pending = true,
+  user_data = 0x0
+}
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x10006066 msp: 0x20041f68
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x10006066 msp: 0x20041f68
+
+[Cycle: 10] remove worker: 0x20041f74
+[INFO] Enter: 752785; Exit: 752797
+0x20041f74:	0x00000000	0x1000a529	0x000003e8	0x00000000
+$20 = {
+  next = 0x0,
+  do_work = 0x1000a529 <handle_sync_func_call>,
+  work_pending = 232,
+  user_data = 0x0
+}
+[WARNING] work_pending invalid: 232
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x20000b14 msp: 0x20041f68
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x20000b14 msp: 0x20041f68
+
+[Cycle: 11] execute once: 0x20041f74
+[INFO] Enter: 774846; Exit: 752797
+0x20041f74:	0x00000000	0x1000a529	0x00000001	0x00000000
+$21 = {
+  next = 0x0,
+  do_work = 0x1000a529 <handle_sync_func_call>,
+  work_pending = true,
+  user_data = 0x0
+}
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x10006066 msp: 0x20041f68
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x10006066 msp: 0x20041f68
+
+[Cycle: 11] remove worker: 0x20041f74
+[INFO] Enter: 774846; Exit: 774859
+0x20041f74:	0x0000000a	0x1000a529	0x000003e8	0x00000000
+$22 = {
+  next = 0xa,
+  do_work = 0x1000a529 <handle_sync_func_call>,
+  work_pending = 232,
+  user_data = 0x0
+}
+[ERROR] next pointer changed from (nil) to 0xa!
+#0  async_context_base_remove_when_pending_worker (
+    self=self@entry=0x20001560 <async_ctx>, worker=worker@entry=0x20041f74)
+    at async_context_base.c:48
+#1  0x1000a494 in async_context_threadsafe_background_when_pending_worker (
+    self_base=0x20001560 <async_ctx>, worker=0x20041f74)
+    at async_context_threadsafe_background.c:340
+#2  0x1000a548 in async_context_remove_when_pending_worker (
+    context=0x20001560 <async_ctx>, worker=0x20041f74) at async_context.h:367
+#3  handle_sync_func_call (context=0x20001560 <async_ctx>, worker=0x20041f74)
+    at async_context_threadsafe_background.c:102
+#4  0x1000a7c2 in async_context_base_execute_once (
+    self=self@entry=0x20001560 <async_ctx>) at async_context_base.c:101
+#5  0x1000a26c in process_under_lock (self=self@entry=0x20001560 <async_ctx>)
+    at async_context_threadsafe_background.c:251
+#6  0x1000a44e in low_priority_irq_handler ()
+    at async_context_threadsafe_background.c:293
+#7  <signal handler called>
+#8  0x10003f90 in main1 () at main.cpp:67
+#9  0x10007994 in core1_wrapper (entry=0x10003f65 <main1()>, 
+    stack_base=<optimized out>) at multicore.c:98
+#10 0x0000017e in ?? ()
+Backtrace stopped: previous frame identical to this frame (corrupt stack?)
+[WARNING] work_pending invalid: 232
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x10006066 msp: 0x20041f68
+[rp2040.core0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x10006066 msp: 0x20041f68
+
+=========== HardFault detected ===========
+r0             0x20001560          536876384
+r1             0xa                 10
+r2             0x0                 0
+r3             0x0                 0
+r4             0x20001560          536876384
+r5             0xa                 10
+r6             0x179               377
+r7             0xe000ed00          -536810240
+r8             0xffffffff          -1
+r9             0xffffffff          -1
+r10            0xffffffff          -1
+r11            0xffffffff          -1
+r12            0x200003ad          536871853
+sp             0x20004888          0x20004888
+lr             0xfffffff1          -15
+pc             0x100030c4          0x100030c4 <isr_hardfault>
+xpsr           0x21000003          553648131
+msp            0x20004888          0x20004888
+psp            0xfffffffc          0xfffffffc
+primask        0x0                 0
+basepri        0x0                 0
+faultmask      0x0                 0
+control        0x0                 0
+
+Stacked registers (r0‑r3,r12,lr,pc,xPSR):
+0x20004888:	0x20001560	0x0000000a	0x00000000	0x00000000
+0x20004898:	0x200003ad	0x1000a37b	0x1000a7be	0x2100002e
+
+Code around faulting PC (0x1000a7be):
+Dump of assembler code from 0x1000a7b6 to 0x1000a7c6:
+   0x1000a7b6 <async_context_base_execute_once+46>:	movs	r3, #0
+   0x1000a7b8 <async_context_base_execute_once+48>:	movs	r1, r5
+   0x1000a7ba <async_context_base_execute_once+50>:	strb	r3, [r5, #8]
+   0x1000a7bc <async_context_base_execute_once+52>:	movs	r0, r4
+   0x1000a7be <async_context_base_execute_once+54>:	ldr	r3, [r5, #4]
+   0x1000a7c0 <async_context_base_execute_once+56>:	blx	r3
+   0x1000a7c2 <async_context_base_execute_once+58>:	ldr	r5, [r5, #0]
+   0x1000a7c4 <async_context_base_execute_once+60>:	b.n	0x1000a798 <async_context_base_execute_once+16>
+End of assembler dump.
+
+Thread 2 (Thread 2 "rp2040.core1" (Name: rp2040.core1, state: breakpoint)):
+#0  isr_hardfault () at crt0.S:170
+#1  <signal handler called>
+#2  0x1000a7be in async_context_base_execute_once (self=self@entry=0x20001560 <async_ctx>) at async_context_base.c:101
+#3  0x1000a26c in process_under_lock (self=self@entry=0x20001560 <async_ctx>) at async_context_threadsafe_background.c:251
+#4  0x1000a44e in low_priority_irq_handler () at async_context_threadsafe_background.c:293
+#5  <signal handler called>
+#6  0x10003f90 in main1 () at main.cpp:67
+#7  0x10007994 in core1_wrapper (entry=0x10003f65 <main1()>, stack_base=<optimized out>) at multicore.c:98
+#8  0x0000017e in ?? ()
+Backtrace stopped: previous frame identical to this frame (corrupt stack?)
+
+Thread 1 (Thread 1 "rp2040.core0" (Name: rp2040.core0, state: debug-request)):
+#0  sleep_until (t=<optimized out>) at time.c:408
+#1  0x100060c0 in sleep_us (us=<optimized out>) at time.c:424
+#2  0x100060da in sleep_ms (ms=<optimized out>) at time.c:440
+#3  0x10003d86 in delay (ms=<optimized out>) at delay.cpp:39
+#4  0x100032f0 in loop () at main.cpp:80
+#5  0x100040b2 in main () at main.cpp:190
+
+==========================================
+(gdb) (gdb) A debugging session is active.
+
+	Inferior 1 [Remote target] will be detached.
+
+Quit anyway? (y or n) [answered Y; input not from terminal]
+Detaching from program: $HOME/CLionProjects/pico-sdk-tests/.pio/build/debug/firmware.elf, Remote target
+[Inferior 1 (Remote target) detached]

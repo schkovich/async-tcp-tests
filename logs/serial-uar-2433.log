@@ -1,0 +1,17 @@
+--- Terminal on /dev/ttyACM0 | 115200 8-N-1
+--- Available filters and text transformations: colorize, debug, default, direct, hexlify, log2file, nocontrol, printable, send_on_enter, time
+--- More details at https://bit.ly/pio-monitor-filters
+--- Quit: Ctrl+C | Menu: Ctrl+T | Help: Ctrl+T followed by Ctrl+H
+C1 ready...
+C0 ready...
+[Counter 1][Enter at: 418663][Exit at: 418741]
+[Counter 2][Enter 440800] Exit 440830 from boot
+Counter 3; Enter 474932, Exit 474954 from boot
+[Counter 4][Enter at: 530232][Exit at: 530257]
+[Counter 5][Enter 552304] Exit 552319 from boot
+Counter 6; Enter 586389, Exit 586402 from boot
+[Counter 7][Enter at: 641515][Exit at: 641527]
+[Counter 8][Enter 663577] Exit 663590 from boot
+Counter 9; Enter 697660, Exit 697671 from boot
+[Counter 10][Enter at: 752785][Exit at: 752797]
+[Counter 11][Enter 774846] Exit 774859 from boot
