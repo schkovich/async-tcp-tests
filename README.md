@@ -14,7 +14,7 @@ This project uses arduino-pico core for debugging RP2040-based Arduino Pico prog
 ```bash
 git clone https://github.com/schkovich/arduino-pico.git 
 cd arduino-pico
-git checkout execute-sync@7c51742
+git checkout execute_sync_2433
 git submodule update --init
 cd ..
 git clone git@github.com:schkovich/pico-sdk-tests.git
