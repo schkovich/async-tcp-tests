@@ -50,7 +50,7 @@ void loop() {
   static unsigned long c0_counter = 0;
   static uint32_t ref_counter = 0;
 
-  if (c0_counter == 55) {
+  if (c0_counter == 5) {
     timestamp_enter = to_us_since_boot(get_absolute_time());
     const auto rc =
         async_context_execute_sync(&async_ctx.core, do_some_work, &ref_counter);
@@ -58,7 +58,7 @@ void loop() {
     timestamp_exit = to_us_since_boot(get_absolute_time());
     Serial1.printf("[Counter %d][Enter at: %llu][Exit at: %llu]\n",
                    rc, timestamp_enter, timestamp_exit);
-  } else if (c0_counter == 77) {
+  } else if (c0_counter == 7) {
     timestamp_enter = to_us_since_boot(get_absolute_time());
     const auto rc =
         async_context_execute_sync(&async_ctx.core, do_some_work, &ref_counter);
@@ -66,7 +66,7 @@ void loop() {
     timestamp_exit = to_us_since_boot(get_absolute_time());
     Serial1.printf("[Counter %d][Enter %llu] Exit %llu from boot\n",
                    rc, timestamp_enter, timestamp_exit);
-  } else if (c0_counter == 111) {
+  } else if (c0_counter == 11) {
     timestamp_enter = to_us_since_boot(get_absolute_time());
     const auto rc =
         async_context_execute_sync(&async_ctx.core, do_some_work, &ref_counter);
@@ -77,7 +77,7 @@ void loop() {
     c0_counter = 0;
   }
   c0_counter++;
-  delay(1);
+  sleep_us(100);
 }
 
 void loop1() { tight_loop_contents(); }

@@ -50,7 +50,7 @@ The pico-sdk build process:
 2. Generates boot stage 2 code for different flash chips
 3. Produces required build artifacts for both RP2040 and RP2350
 
-For detailed build steps, see [make-libpico.sh](https://github.com/schkovich/arduino-pico/blob/execute-sync%407c51742/tools/libpico/make-libpico.sh) in the arduino-pico core.
+For detailed build steps, see [make-libpico.sh](https://github.com/schkovich/arduino-pico/blob/execute_sync_2433/tools/libpico/make-libpico.sh) in the arduino-pico core.
 
 ### Development Workflow
 
