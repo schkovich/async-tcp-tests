@@ -1,15 +1,25 @@
-watch ((async_context_threadsafe_background_t*)0x20001590)->lock_mutex.owner
+# Initialize list tracking
+set $head = 0
+set $count = 0
+
+define push_state
+  # Allocate memory for node (mutex + next pointer)
+  # sizeof(recursive_mutex_t) + sizeof(void*)
+  set $new = (void*)malloc(24)
+  # Store mutex state
+  set *(recursive_mutex_t*)$new = ((async_context_threadsafe_background_t*)self_base)->lock_mutex
+  # Store next pointer after mutex
+  set *(void**)($new + 16) = $head
+  # Update head
+  set $head = $new
+  set $count = $count + 1
+end
+
+#break *0x1000a650
+#break *0x20041fb0
+break async_context_threadsafe_background_execute_sync
 commands
   silent
-  set $self = (async_context_threadsafe_background_t*)0x20001590
-  set $caller_core = get_core_num()
-  printf "\n=== Mutex Owner Change [core%d] ===\n", $caller_core
-  printf "At: %s\n", $pc == 0 ? "startup" : $_function()
-  printf "Old owner: %d\n", $old
-  printf "New owner: %d\n", $self->lock_mutex.owner
-  if $self->lock_mutex.enter_count > 0
-    printf "Enter count: %d\n", $self->lock_mutex.enter_count
-  end
-  printf "=================\n"
+  push_state
   continue
 end
