@@ -93,7 +93,7 @@ void loop() {
         c0_counter = 0;
     }
     c0_counter++;
-    sleep_ms(1);
+    sleep_us(777);
 }
 
 void loop1() {
@@ -105,7 +105,7 @@ void loop1() {
         .in_use = false
     };
 
-    if (c1_counter == 333) {
+    if (c1_counter == 33) {
         atw_counter++;
         if (!state.in_use.exchange(true)) {  // Only proceed if we can acquire the state
             state.worker.do_work = hello_world;
@@ -116,5 +116,5 @@ void loop1() {
     }
     c1_counter++;
 
-    sleep_us(100);
+    sleep_us(77);
 }
