@@ -1,0 +1,3 @@
+[submodule "lib/async-tcp"]
+	path = lib/async-tcp
+	url = git@github.com:schkovich/async-tcp.git
