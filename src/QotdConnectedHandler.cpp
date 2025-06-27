@@ -16,7 +16,7 @@
  */
 
 #include "QotdConnectedHandler.hpp"
-#include "Arduino.h"
+#include <Arduino.h>
 
 namespace e5 {
 

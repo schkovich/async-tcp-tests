@@ -17,7 +17,7 @@
 #include "PrintHandler.hpp"
 #include <iostream>
 
-#include "Arduino.h"
+#include <Arduino.h>
 
 namespace e5 {
 
