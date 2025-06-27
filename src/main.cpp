@@ -59,8 +59,8 @@ constexpr uint16_t qotd_port = QOTD_PORT; // QOTD service port
 constexpr uint16_t echo_port = ECHO_PORT; // Echo service port
 
 // TCP clients
-AsyncTcp::AsyncTcpClient qotd_client;
-AsyncTcp::AsyncTcpClient echo_client;
+async_tcp::AsyncTcpClient qotd_client;
+async_tcp::AsyncTcpClient echo_client;
 
 // IP addresses
 IPAddress qotd_ip_address;
@@ -81,9 +81,9 @@ constexpr long blue_interval = 11111; // Interval for heap stats (milliseconds)
 async_context_threadsafe_background_t background_ctx0;
 async_context_threadsafe_background_t background_ctx1;
 auto ctx0 =
-    std::make_unique<AsyncTcp::ContextManager>(background_ctx0); // Core 0
+    std::make_unique<async_tcp::ContextManager>(background_ctx0); // Core 0
 auto ctx1 =
-    std::make_unique<AsyncTcp::ContextManager>(background_ctx1); // Core 1
+    std::make_unique<async_tcp::ContextManager>(background_ctx1); // Core 1
 
 // Thread-safe buffer for storing the quote
 e5::QuoteBuffer qotd_buffer(ctx0);

@@ -12,7 +12,7 @@
 
 namespace e5 {
 
-    using AsyncTcp::ContextManagerPtr;
+    using async_tcp::ContextManagerPtr;
 
     /**
      * @class SerialPrinter

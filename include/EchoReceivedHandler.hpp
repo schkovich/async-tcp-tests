@@ -18,7 +18,7 @@
 #include "SerialPrinter.hpp"
 
 namespace e5 {
-    using namespace AsyncTcp;
+    using namespace async_tcp;
     using Worker = EventBridge;
 
     /**

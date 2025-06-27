@@ -22,7 +22,7 @@
 
 namespace e5 {
 
-    using namespace AsyncTcp;
+    using namespace async_tcp;
 
     /**
      * @class PrintHandler
