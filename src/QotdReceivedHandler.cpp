@@ -1,6 +1,7 @@
 /**
  * @file QotdReceivedHandler.cpp
- * @brief Implementation of the handler for Quote of the Day (QOTD) data received events.
+ * @brief Implementation of the handler for Quote of the Day (QOTD) data
+ * received events.
  *
  * This file implements the QotdReceivedHandler class which handles data
  * received events for a QOTD client. When quote data is received, this handler
@@ -30,7 +31,8 @@ namespace e5 {
      * to receive the complete quote in a single chunk.
      *
      * The method executes on the core where the ContextManager initiated the
-     * async_context_t, ensuring proper core affinity for non-thread-safe operations.
+     * async_context_t, ensuring proper core affinity for non-thread-safe
+     * operations.
      */
     void QotdReceivedHandler::onWork() {
         // Check for available data using peekAvailable
@@ -40,7 +42,8 @@ namespace e5 {
             if (const char *peek_buffer = m_io.peekBuffer();
                 peek_buffer != nullptr) {
                 // Create a string from the peeked data
-                // This makes a copy of the data, so the original is safe to consume.
+                // This makes a copy of the data, so the original is safe to
+                // consume.
                 const std::string data(peek_buffer, available);
 
                 m_quote_buffer.append(data);
@@ -48,10 +51,10 @@ namespace e5 {
                 // Mark the data as consumed in the TCP buffer
                 m_io.peekConsume(available);
 
-                DEBUGWIRE("[QOTD] Received %zu bytes: %.*s\n",
-                       available,
-                       std::min(static_cast<size_t>(32), available),  // Show at most 32 chars
-                       peek_buffer);
+                DEBUGWIRE("[QOTD] Received %zu bytes: %.*s\n", available,
+                          std::min(static_cast<size_t>(32),
+                                   available), // Show at most 32 chars
+                          peek_buffer);
             }
         }
     }

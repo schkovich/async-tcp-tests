@@ -11,6 +11,7 @@ This project uses arduino-pico core for debugging RP2040-based Arduino Pico prog
 ## Setup Process
 
 1. Clone those repositories:
+
 ```bash
 git clone https://github.com/schkovich/arduino-pico.git 
 cd arduino-pico
@@ -22,6 +23,7 @@ cd pico-sdk-tests
 ```
 
 ## Project Structure
+
 ```plaintext
 
 ├── arduino-pico # Forked arduino-pico core
@@ -33,7 +35,14 @@ cd pico-sdk-tests
 ```
 
 ## Project configuration
-The arduino-pico core is configured in [platformio.ini](https://docs.platformio.org/en/latest/projectconf/index.html#platformio-ini-project-configuration-file) via [platform_package](https://docs.platformio.org/en/latest/projectconf/sections/env/options/platform/platform_packages.html#platform-packages) option, pointing to the [local folder](https://docs.platformio.org/en/latest/core/userguide/pkg/cmd_install.html#local-folder) and “Symbolic Link” feature:
+
+The arduino-pico core is configured
+in [platformio.ini](https://docs.platformio.org/en/latest/projectconf/index.html#platformio-ini-project-configuration-file)
+via [platform_package](https://docs.platformio.org/en/latest/projectconf/sections/env/options/platform/platform_packages.html#platform-packages)
+option, pointing to
+the [local folder](https://docs.platformio.org/en/latest/core/userguide/pkg/cmd_install.html#local-folder) and “Symbolic
+Link” feature:
+
 ```ini
 [env:debug]
 board = nanorp2040connect
@@ -43,14 +52,18 @@ board_build.core = earlephilhower
 platform_packages =
     framework-arduinopico@symlink://../arduino-pico
 ```
+
 ## Building Core Components
+
 The pico-sdk build process:
 
 1. Compiles core SDK libraries
 2. Generates boot stage 2 code for different flash chips
 3. Produces required build artifacts for both RP2040 and RP2350
 
-For detailed build steps, see [make-libpico.sh](https://github.com/schkovich/arduino-pico/blob/execute-sync%407c51742/tools/libpico/make-libpico.sh) in the arduino-pico core.
+For detailed build steps,
+see [make-libpico.sh](https://github.com/schkovich/arduino-pico/blob/execute-sync%407c51742/tools/libpico/make-libpico.sh)
+in the arduino-pico core.
 
 ### Development Workflow
 

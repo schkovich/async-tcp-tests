@@ -31,10 +31,11 @@ namespace e5 {
     void EchoReceivedHandler::onWork() {
         const size_t available = m_io.peekAvailable();
 
-        if (available == 0) return;  // No data to handle
+        if (available == 0)
+            return; // No data to handle
 
         // Get direct access to data without consuming it
-        const char* data = m_io.peekBuffer();
+        const char *data = m_io.peekBuffer();
 
         // Create a unique_ptr to string directly
         auto content = std::make_unique<std::string>(data, available);

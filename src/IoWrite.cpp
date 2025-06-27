@@ -1,6 +1,7 @@
 /**
  * @file IoWrite.cpp
- * @brief Implementation of thread-safe wrapper for AsyncTcpClient write operations
+ * @brief Implementation of thread-safe wrapper for AsyncTcpClient write
+ * operations
  *
  * This file implements the IoWrite class which provides thread-safe access to
  * AsyncTcpClient write operations using the SyncBridge pattern.
@@ -16,41 +17,44 @@
 namespace e5 {
 
     /**
-     * @brief Constructs an IoWrite with the specified context manager and client
+     * @brief Constructs an IoWrite with the specified context manager and
+     * client
      *
      * @param ctx Shared context manager for synchronized execution
      * @param client Reference to the AsyncTcpClient
      */
-    IoWrite::IoWrite(const ContextManagerPtr& ctx, AsyncTcpClient& client)
+    IoWrite::IoWrite(const ContextManagerPtr &ctx, AsyncTcpClient &client)
         : SyncBridge(ctx), m_client(client) {}
 
     /**
      * @brief Executes write operations in a thread-safe manner
      *
      * This method is called by the SyncBridge to perform write operations.
-     * It ensures that all operations happen on the core where the ContextManager
-     * was initialized, providing thread safety.
+     * It ensures that all operations happen on the core where the
+     * ContextManager was initialized, providing thread safety.
      *
      * @param payload Write operation instruction
      * @return PICO_OK on success
      */
     uint32_t IoWrite::onExecute(const SyncPayloadPtr payload) {
 
-        switch (auto* write_payload = static_cast<WritePayload*>(payload.get()); write_payload->type) {
-            case WritePayload::BUFFER:
-                write_payload->result = m_client.write(write_payload->data, write_payload->size);
-                break;
+        switch (auto *write_payload =
+                    static_cast<WritePayload *>(payload.get());
+                write_payload->type) {
+        case WritePayload::BUFFER:
+            write_payload->result =
+                m_client.write(write_payload->data, write_payload->size);
+            break;
 
-            case WritePayload::STRING:
-                write_payload->result = m_client.write(
-                    reinterpret_cast<const uint8_t*>(write_payload->str),
-                    strlen(write_payload->str)
-                );
-                break;
+        case WritePayload::STRING:
+            write_payload->result = m_client.write(
+                reinterpret_cast<const uint8_t *>(write_payload->str),
+                strlen(write_payload->str));
+            break;
 
-            case WritePayload::STREAM:
-                write_payload->result = m_client.write(*write_payload->stream);
-                break;
+        case WritePayload::STREAM:
+            write_payload->result = m_client.write(*write_payload->stream);
+            break;
         }
 
         return PICO_OK;
@@ -67,7 +71,7 @@ namespace e5 {
      * @param size Size of the data buffer
      * @return Amount bytes written
      */
-    size_t IoWrite::write(const uint8_t* data, const size_t size) {
+    size_t IoWrite::write(const uint8_t *data, const size_t size) {
         auto payload = std::make_unique<WritePayload>();
         payload->type = WritePayload::BUFFER;
         payload->data = data;
@@ -86,9 +90,7 @@ namespace e5 {
      * @param b Byte to write
      * @return Amount bytes written (0 or 1)
      */
-    size_t IoWrite::write(const uint8_t b) {
-        return write(&b, 1);
-    }
+    size_t IoWrite::write(const uint8_t b) { return write(&b, 1); }
 
     /**
      * @brief Writes a null-terminated string to the client
@@ -100,7 +102,7 @@ namespace e5 {
      * @param str Null-terminated string to write
      * @return Amount bytes written
      */
-    size_t IoWrite::write(const char* str) {
+    size_t IoWrite::write(const char *str) {
         auto payload = std::make_unique<WritePayload>();
         payload->type = WritePayload::STRING;
         payload->str = str;
@@ -111,14 +113,14 @@ namespace e5 {
     /**
      * @brief Writes data from a stream to the client
      *
-     * This method writes all available data from the provided stream to the AsyncTcpClient.
-     * Thread-safe through SyncBridge integration can be called from any core
-     * or interrupt context.
+     * This method writes all available data from the provided stream to the
+     * AsyncTcpClient. Thread-safe through SyncBridge integration can be called
+     * from any core or interrupt context.
      *
      * @param stream Stream to read data from
      * @return Amount bytes written
      */
-    size_t IoWrite::write(Stream& stream) {
+    size_t IoWrite::write(Stream &stream) {
         auto payload = std::make_unique<WritePayload>();
         payload->type = WritePayload::STREAM;
         payload->stream = &stream;
