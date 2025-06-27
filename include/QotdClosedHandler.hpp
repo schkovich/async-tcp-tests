@@ -17,11 +17,11 @@
  */
 
 #pragma once
-#include "AsyncTcpClient.hpp"
 #include "ContextManager.hpp"
 #include "EventBridge.hpp"
 #include "QuoteBuffer.hpp"
 #include "SerialPrinter.hpp"
+#include "TcpClient.hpp"
 
 namespace e5 {
     using namespace async_tcp;

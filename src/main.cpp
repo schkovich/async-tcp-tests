@@ -18,7 +18,6 @@
 // -DESPHOST_DATA_READY=D6 -DESPHOST_CS=D1 -DESPHOSTSPI=SPI
 #endif
 
-#include "AsyncTcpClient.hpp"
 #include "ContextManager.hpp"
 #include "EchoConnectedHandler.hpp"
 #include "EchoReceivedHandler.hpp"
@@ -28,6 +27,7 @@
 #include "QotdReceivedHandler.hpp"
 #include "QuoteBuffer.hpp"
 #include "SerialPrinter.hpp"
+#include "TcpClient.hpp"
 #include "secrets.h" // Contains STASSID, STAPSK, QOTD_HOST, ECHO_HOST, QOTD_PORT, ECHO_PORT
 #include <WiFi.h>
 #include <algorithm>
@@ -59,8 +59,8 @@ constexpr uint16_t qotd_port = QOTD_PORT; // QOTD service port
 constexpr uint16_t echo_port = ECHO_PORT; // Echo service port
 
 // TCP clients
-async_tcp::AsyncTcpClient qotd_client;
-async_tcp::AsyncTcpClient echo_client;
+async_tcp::TcpClient qotd_client;
+async_tcp::TcpClient echo_client;
 
 // IP addresses
 IPAddress qotd_ip_address;

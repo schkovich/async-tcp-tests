@@ -14,9 +14,9 @@
  */
 
 #pragma once
-#include "AsyncTcpClient.hpp"
 #include "ContextManager.hpp"
 #include "SyncBridge.hpp"
+#include "TcpClient.hpp"
 
 namespace e5 {
 
@@ -39,7 +39,7 @@ namespace e5 {
      */
     class IoWrite final : public SyncBridge {
         private:
-            AsyncTcpClient &m_client; ///< Reference to the AsyncTcpClient
+            TcpClient &m_client; ///< Reference to the AsyncTcpClient
 
             /**
              * @struct WritePayload
@@ -89,8 +89,7 @@ namespace e5 {
              * @param ctx Shared context manager for synchronized execution
              * @param client Reference to the AsyncTcpClient
              */
-            explicit IoWrite(const ContextManagerPtr &ctx,
-                             AsyncTcpClient &client);
+            explicit IoWrite(const ContextManagerPtr &ctx, TcpClient &client);
 
             /**
              * @brief Writes data from a buffer to the client

@@ -23,7 +23,7 @@ namespace e5 {
      * @param ctx Shared context manager for synchronized execution
      * @param client Reference to the AsyncTcpClient
      */
-    IoWrite::IoWrite(const ContextManagerPtr &ctx, AsyncTcpClient &client)
+    IoWrite::IoWrite(const ContextManagerPtr &ctx, TcpClient &client)
         : SyncBridge(ctx), m_client(client) {}
 
     /**

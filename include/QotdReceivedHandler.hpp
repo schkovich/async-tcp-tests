@@ -16,10 +16,10 @@
  */
 
 #pragma once
-#include "AsyncTcpClient.hpp"
 #include "ContextManager.hpp"
 #include "EventBridge.hpp"
 #include "QuoteBuffer.hpp"
+#include "TcpClient.hpp"
 
 namespace e5 {
     using namespace async_tcp;
@@ -41,7 +41,7 @@ namespace e5 {
             QuoteBuffer
                 &m_quote_buffer;  /**< Reference to the thread-safe buffer where
                                      the quote will be stored. */
-            AsyncTcpClient &m_io; /**< Reference to the TCP client handling the
+            TcpClient &m_io; /**< Reference to the TCP client handling the
                                      connection. */
 
         protected:
@@ -75,7 +75,7 @@ namespace e5 {
              */
             explicit QotdReceivedHandler(const ContextManagerPtr &ctx,
                                          QuoteBuffer &quote_buffer,
-                                         AsyncTcpClient &io)
+                                         TcpClient &io)
                 : EventBridge(ctx), m_quote_buffer(quote_buffer), m_io(io) {}
     };
 

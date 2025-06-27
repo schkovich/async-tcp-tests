@@ -16,10 +16,10 @@
  */
 
 #pragma once
-#include "AsyncTcpClient.hpp"
 #include "ContextManager.hpp"
 #include "EventBridge.hpp"
 #include "SerialPrinter.hpp"
+#include "TcpClient.hpp"
 
 namespace e5 {
     using namespace async_tcp;
@@ -37,7 +37,7 @@ namespace e5 {
      * operations, and can use the SerialPrinter to output status messages.
      */
     class EchoConnectedHandler final : public EventBridge {
-            AsyncTcpClient &m_io; /**< Reference to the TCP client handling the
+            TcpClient &m_io; /**< Reference to the TCP client handling the
                                      connection. */
             SerialPrinter &m_serial_printer; /**< Reference to the serial
                                                 printer for output. */
@@ -69,7 +69,7 @@ namespace e5 {
              * messages
              */
             explicit EchoConnectedHandler(const ContextManagerPtr &ctx,
-                                          AsyncTcpClient &io,
+                                          TcpClient &io,
                                           SerialPrinter &serial_printer)
                 : EventBridge(ctx), m_io(io), m_serial_printer(serial_printer) {
             }
