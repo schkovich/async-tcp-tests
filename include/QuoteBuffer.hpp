@@ -13,7 +13,6 @@
 #pragma once
 #include "ContextManager.hpp"
 #include "SyncBridge.hpp"
-#include <atomic>
 #include <string>
 
 namespace e5 {
@@ -39,7 +38,6 @@ namespace e5 {
     class QuoteBuffer final : public SyncBridge {
 
             std::string m_buffer{}; ///< The internal string buffer
-            std::atomic<bool> busy_guard = false;
 
             /**
              * @struct BufferPayload
@@ -118,6 +116,9 @@ namespace e5 {
              * @param data String to append to the buffer content
              */
             void append(std::string data);
+
+            // Shared end-of-quote marker for QOTD protocol
+            static constexpr const char* END_OF_QUOTE_MARKER = "\n--- End of Quote ---\n";
     };
 
 } // namespace e5

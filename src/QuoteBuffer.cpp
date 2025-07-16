@@ -69,18 +69,14 @@ namespace e5 {
      * @param data String to set as the buffer content
      */
     void QuoteBuffer::set(const std::string data) { // NOLINT
-        if (bool expected = false;
-            busy_guard.compare_exchange_strong(expected, true)) {
-            auto payload = std::make_unique<BufferPayload>();
-            payload->op = BufferPayload::SET;
-            payload->data = data;
-            if (const auto result = execute(std::move(payload));
-                result != PICO_OK) {
-                DEBUGV("[c%d][%llu][ERROR] QuoteBuffer::set() returned error "
-                       "%d.\n",
-                       rp2040.cpuid(), time_us_64(), result);
-            }
-            busy_guard = false;
+        auto payload = std::make_unique<BufferPayload>();
+        payload->op = BufferPayload::SET;
+        payload->data = data;
+        if (const auto result = execute(std::move(payload));
+            result != PICO_OK) {
+            DEBUGV("[c%d][%llu][ERROR] QuoteBuffer::set() returned error "
+                   "%d.\n",
+                   rp2040.cpuid(), time_us_64(), result);
         }
     }
 
@@ -94,26 +90,18 @@ namespace e5 {
      * @return Copy of the current buffer content
      */
     std::string QuoteBuffer::get() { // NOLINT
-
         std::string result_string;
-        if (bool expected = false;
-            busy_guard.compare_exchange_strong(expected, true)) {
-            auto payload = std::make_unique<BufferPayload>();
-            payload->op = BufferPayload::GET;
-            payload->result_ptr = &result_string;
+        auto payload = std::make_unique<BufferPayload>();
+        payload->op = BufferPayload::GET;
+        payload->result_ptr = &result_string;
 
-            if (const auto result = execute(std::move(payload));
-                result != PICO_OK) {
-                DEBUGV("[c%d][%llu][ERROR] QuoteBuffer::get() returned error "
-                       "%d.\n",
-                       rp2040.cpuid(), time_us_64(), result);
-                busy_guard = false;
-                return result_string;
-            }
-
-            busy_guard = false;
-            return result_string;
+        if (const auto result = execute(std::move(payload));
+            result != PICO_OK) {
+            DEBUGV("[c%d][%llu][ERROR] QuoteBuffer::get() returned error "
+                   "%d.\n",
+                   rp2040.cpuid(), time_us_64(), result);
         }
+
         return result_string;
     }
 
@@ -127,18 +115,14 @@ namespace e5 {
      * @param data String to append to the buffer content
      */
     void QuoteBuffer::append(const std::string data) { // NOLINT
-        if (bool expected = false;
-            busy_guard.compare_exchange_strong(expected, true)) {
-            auto payload = std::make_unique<BufferPayload>();
-            payload->op = BufferPayload::APPEND;
-            payload->data = data;
-            if (const auto result = execute(std::move(payload));
-                result != PICO_OK) {
-                DEBUGV("[c%d][%llu][ERROR] QuoteBuffer::append() returned "
-                       "error %d.\n",
-                       rp2040.cpuid(), time_us_64(), result);
-            }
-            busy_guard = false;
+        auto payload = std::make_unique<BufferPayload>();
+        payload->op = BufferPayload::APPEND;
+        payload->data = data;
+        if (const auto result = execute(std::move(payload));
+            result != PICO_OK) {
+            DEBUGV("[c%d][%llu][ERROR] QuoteBuffer::append() returned "
+                   "error %d.\n",
+                   rp2040.cpuid(), time_us_64(), result);
         }
     }
 
