@@ -16,6 +16,7 @@
 #include "EventBridge.hpp"
 #include "SerialPrinter.hpp"
 #include "TcpClient.hpp"
+#include "QuoteBuffer.hpp"
 
 namespace e5 {
     using namespace async_tcp;
@@ -37,8 +38,8 @@ namespace e5 {
                                      connection. */
             SerialPrinter &m_serial_printer; /**< Reference to the serial
                                                 printer for output. */
-            static constexpr int MAX_QOTD_SIZE =
-                512;              /**< Maximum size for received data buffer. */
+            QuoteBuffer &m_qotd_buffer; /**< Reference to the quote buffer for
+                                            storing received data. */
             std::string m_buffer; // accumulate incoming data
 
         protected:
@@ -65,11 +66,17 @@ namespace e5 {
              * @param io Reference to the TCP client that received the data
              * @param serial_printer Reference to the serial printer for output
              * messages
+             * @param qotd_buffer Reference to the quote buffer for storing
+             * received data
              */
             explicit EchoReceivedHandler(const ContextManagerPtr &ctx,
                                          TcpClient &io,
-                                         SerialPrinter &serial_printer)
-                : EventBridge(ctx), m_io(io), m_serial_printer(serial_printer) {
+                                         SerialPrinter &serial_printer,
+                                         QuoteBuffer &qotd_buffer)
+                : EventBridge(ctx),
+                  m_io(io),
+                  m_serial_printer(serial_printer),
+                  m_qotd_buffer(qotd_buffer) {
             }
     };
 

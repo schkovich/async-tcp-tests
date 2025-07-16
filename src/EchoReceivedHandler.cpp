@@ -12,6 +12,7 @@
  */
 
 #include "EchoReceivedHandler.hpp"
+#include "QuoteBuffer.hpp"  // for END_OF_QUOTE_MARKER
 #include <string>
 
 namespace e5 {
@@ -30,30 +31,21 @@ namespace e5 {
      */
     void EchoReceivedHandler::onWork() {
         const size_t available = m_io.peekAvailable();
-
-        if (available == 0)
-            return; // No data to handle
-
-        // Get direct access to data without consuming it
+        if (available == 0) return;
         const char *data = m_io.peekBuffer();
-
-        // Create a unique_ptr to string directly
-        auto content = std::make_unique<std::string>(data, available);
-
-        // Look for and remove the End of Quote marker if present
-        const std::string marker = "--- End of Quote ---";
-        if (const size_t marker_pos = content->find(marker);
-            marker_pos != std::string::npos) {
-            // Remove the marker and create a clean output string
-            *content = content->substr(0, marker_pos);
-            DEBUGWIRE("Removed End of Quote marker from echo response\n");
-        }
-
-        // Pass the unique_ptr directly to the serial printer
-        m_serial_printer.print(std::move(content));
-
-        // Consume the data after printing to avoid duplicate processing
+        // Print any incoming echo data
+        std::string chunk(data, available);
+        // Accumulate buffer for marker detection
+        m_buffer.append(chunk);
         m_io.peekConsume(available);
+        // When end-of-quote marker is seen across any segments, clear buffer and quote
+        static const std::string marker = ::e5::QuoteBuffer::END_OF_QUOTE_MARKER;
+        if (m_buffer.find(marker) != std::string::npos) {
+            auto quote = std::make_unique<std::string>(m_buffer);
+                m_serial_printer.print(std::move(quote));
+            m_qotd_buffer.set("");
+            m_buffer.clear();
+        }
     }
 
 } // namespace e5
