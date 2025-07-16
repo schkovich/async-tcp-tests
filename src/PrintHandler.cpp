@@ -25,26 +25,13 @@ namespace e5 {
     /**
      * @brief Handles the print operation.
      *
-     * This method is called when the handler is executed. It:
-     * 1. Retrieves the message from the message buffer
-     * 2. Prints the message to the serial output if it's not empty
-     * 3. Removes itself from the SerialPrinter's task registry using its own
-     * address as the key
-     *
-     * The self-removal pattern demonstrates how to implement one-shot
-     * operations that clean up after themselves. When the task is removed from
-     * the SerialPrinter, the unique_ptr owning this handler is destroyed, which
-     * triggers the handler's destructor and deregisters it from the async
-     * context.
-     *
-     * The method is executed on the core where the ContextManager was
-     * initialized, ensuring proper core affinity for non-thread-safe operations
-     * like printing.
+     * This method is called when the print_handler is executed. It prints the
+     * stored message to the serial output. The message and handler cleanup is
+     * handled automatically by the EventBridge's self-ownership mechanism.
      */
-    void PrintHandler::onWork() {
+    void  PrintHandler::onWork() {
         if (!m_message->empty()) {
             Serial1.println(m_message->c_str());
-            m_message.reset();
         }
     }
 

@@ -46,15 +46,8 @@ namespace e5 {
         DEBUGWIRE("[QOTD] Connection closed. Received (%d bytes)\n",
                   complete_quote.size());
 
-        // Append a marker to the buffer to indicate the quote is complete
+        // Append a marker to the buffer to indicate the quote is complete.
         m_quote_buffer.append("\n--- End of Quote ---\n");
-
-        // Debug: Check if the marker was actually added
-        std::string buffer_after_marker = m_quote_buffer.get();
-        DEBUGWIRE("Buffer after adding marker (%d bytes): %s\n",
-                  buffer_after_marker.size(),
-                  buffer_after_marker.substr(buffer_after_marker.size() - 20)
-                      .c_str());
     }
 
 } // namespace e5

@@ -40,10 +40,11 @@ namespace e5 {
         m_io.keepAlive();
         m_io.setNoDelay(true); // Disable Nagle's algorithm for lower latency
 
-        const std::string local_ip(m_io.localIP().toString().c_str());
-
         auto notify_connect = std::make_unique<std::string>(
-            "QOTD client connected. Local IP: " + local_ip + "\n");
+            std::string("QOTD client connected. Local IP: ")
+            + m_io.localIP().toString().c_str()
+            + "\n");
+
         m_serial_printer.print(std::move(notify_connect));
     }
 
