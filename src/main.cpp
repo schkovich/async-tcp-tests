@@ -21,7 +21,6 @@
 #include "ContextManager.hpp"
 #include "EchoConnectedHandler.hpp"
 #include "EchoReceivedHandler.hpp"
-//#include "IoWrite.hpp"
 #include "QotdClosedHandler.hpp"
 #include "QotdConnectedHandler.hpp"
 #include "QotdReceivedHandler.hpp"
