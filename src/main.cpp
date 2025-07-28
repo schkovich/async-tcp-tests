@@ -27,6 +27,7 @@
 #include "QuoteBuffer.hpp"
 #include "SerialPrinter.hpp"
 #include "TcpClient.hpp"
+#include "TcpWriter.hpp"
 #include "secrets.h" // Contains STASSID, STAPSK, QOTD_HOST, ECHO_HOST, QOTD_PORT, ECHO_PORT
 #include <WiFi.h>
 #include <algorithm>
@@ -65,6 +66,20 @@ async_tcp::TcpClient echo_client;
 IPAddress qotd_ip_address;
 IPAddress echo_ip_address;
 
+// Global asynchronous context managers for each core
+async_context_threadsafe_background_t background_ctx0;
+async_context_threadsafe_background_t background_ctx1;
+auto ctx0 =
+    std::make_unique<async_tcp::ContextManager>(background_ctx0); // Core 0
+auto ctx1 =
+    std::make_unique<async_tcp::ContextManager>(background_ctx1); // Core 1
+
+// Thread-safe buffer for storing the quote
+e5::QuoteBuffer qotd_buffer(ctx1);
+
+// Set up the SerialPrinter for Core 1
+e5::SerialPrinter serial_printer(ctx1);
+
 // Timing variables
 unsigned long previous_qotd = 0;    // Last time QOTD was requested
 unsigned long previous_echo = 0; // Last time echo was sent
@@ -79,20 +94,6 @@ constexpr long echo_interval =
 constexpr long stack_0_interval = 1111; // Interval for heap stats (milliseconds)
 constexpr unsigned long stack_1_interval = 1010;
 constexpr unsigned long heap_interval = 777; // Interval for heap stats (milliseconds)
-
-// Global asynchronous context managers for each core
-async_context_threadsafe_background_t background_ctx0;
-async_context_threadsafe_background_t background_ctx1;
-auto ctx0 =
-    std::make_unique<async_tcp::ContextManager>(background_ctx0); // Core 0
-auto ctx1 =
-    std::make_unique<async_tcp::ContextManager>(background_ctx1); // Core 1
-
-// Thread-safe buffer for storing the quote
-e5::QuoteBuffer qotd_buffer(ctx1);
-
-// Set up the SerialPrinter for Core 1
-e5::SerialPrinter serial_printer(ctx1);
 
 /**
  * @brief Connects to the "quote of the day" server and initiates a connection.
@@ -152,11 +153,12 @@ void get_echo() {
                           "position %d\n",
                           marker_pos);
 
-                // Enqueue full quote to echo client
+                // Send full quote via standard TcpClient interface
+                // This will automatically delegate to the registered TcpWriter
                 DEBUGWIRE("Sending complete quote to echo server (%d bytes)\n", buffer_content.size());
-                size_t sent = echo_client.write(buffer_content.c_str(), buffer_content.size());
+                size_t sent = echo_client.write(reinterpret_cast<const uint8_t*>(buffer_content.c_str()), buffer_content.size());
                 if (sent < buffer_content.size()) {
-                    DEBUGWIRE("[ERROR] echo_client.write enqueued only %u/%u bytes\n", sent, buffer_content.size());
+                    DEBUGWIRE("[ERROR] echo_client.write sent only %u/%u bytes\n", sent, buffer_content.size());
                 }
             } else {
                 // Quote is incomplete yet, waiting for more data
@@ -229,24 +231,33 @@ void print_stack_stats() {
         panic_compact("CTX init failed on Core 0\n");
     }
 
+    // Create TcpWriter locally and transfer ownership to the echo client
+    auto echo_writer = std::make_unique<async_tcp::TcpWriter>(ctx0, echo_client);
+    echo_client.setWriter(std::move(echo_writer));
+
     auto echo_connected_handler = std::make_unique<e5::EchoConnectedHandler>(
         ctx0, echo_client, serial_printer);
+    echo_connected_handler->initialisePerpetualBridge();
     echo_client.setOnConnectedCallback(std::move(echo_connected_handler));
 
     auto echo_received_handler = std::make_unique<e5::EchoReceivedHandler>(
         ctx0, echo_client, serial_printer, qotd_buffer);
+    echo_received_handler->initialisePerpetualBridge();
     echo_client.setOnReceivedCallback(std::move(echo_received_handler));
 
     auto qotd_connected_handler = std::make_unique<e5::QotdConnectedHandler>(
         ctx0, qotd_client, serial_printer, qotd_buffer);
+        qotd_connected_handler->initialisePerpetualBridge();
     qotd_client.setOnConnectedCallback(std::move(qotd_connected_handler));
 
     auto qotd_received_handler = std::make_unique<e5::QotdReceivedHandler>(
         ctx0, qotd_buffer, qotd_client);
+    qotd_received_handler->initialisePerpetualBridge();
     qotd_client.setOnReceivedCallback(std::move(qotd_received_handler));
 
     auto qotd_closed_handler = std::make_unique<e5::QotdClosedHandler>(
         ctx0, qotd_buffer, serial_printer);
+    qotd_closed_handler->initialisePerpetualBridge();
     qotd_client.setOnClosedCallback(std::move(qotd_closed_handler));
 
     operational = true;
@@ -315,4 +326,5 @@ void loop1() {
         previous_heap = currentMillis;
         print_heap_stats();
     }
+
 }

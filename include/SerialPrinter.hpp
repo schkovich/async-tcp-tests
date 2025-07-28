@@ -9,6 +9,7 @@
 #pragma once
 #include "ContextManager.hpp"
 #include <string>
+#include <atomic>
 
 namespace e5 {
 
@@ -47,6 +48,8 @@ namespace e5 {
              * @return PICO_OK on success, or error code on failure
              */
             uint32_t print(std::unique_ptr<std::string> message);
+
+            static std::atomic<bool> print_lock; ///< Global serialization and re-entrancy guard
     };
 
 } // namespace e5

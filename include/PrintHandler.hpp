@@ -82,6 +82,7 @@ namespace e5 {
                 auto handler =
                     std::make_unique<PrintHandler>(ctx, std::move(message));
                 PrintHandler *raw_ptr = handler.get();
+                raw_ptr->initialiseEphemeralBridge();
                 raw_ptr->takeOwnership(std::move(handler));
                 raw_ptr->run(0);
             }
