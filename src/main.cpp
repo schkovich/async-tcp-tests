@@ -67,12 +67,8 @@ IPAddress qotd_ip_address;
 IPAddress echo_ip_address;
 
 // Global asynchronous context managers for each core
-async_context_threadsafe_background_t background_ctx0;
-async_context_threadsafe_background_t background_ctx1;
-auto ctx0 =
-    std::make_unique<async_tcp::ContextManager>(background_ctx0); // Core 0
-auto ctx1 =
-    std::make_unique<async_tcp::ContextManager>(background_ctx1); // Core 1
+std::unique_ptr<async_tcp::ContextManager> ctx0 = std::make_unique<async_tcp::ContextManager>(); // Core 0
+std::unique_ptr<async_tcp::ContextManager> ctx1 = std::make_unique<async_tcp::ContextManager>(); // Core 1
 
 // Thread-safe buffer for storing the quote
 e5::QuoteBuffer qotd_buffer(ctx1);
@@ -275,8 +271,6 @@ void print_stack_stats() {
         !ctx1->initDefaultContext(config)) {
         panic_compact("CTX init failed on Core 1\n");
     }
-
-    qotd_buffer.initialize();
 
     ctx1_ready = true;
 }
