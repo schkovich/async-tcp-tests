@@ -62,7 +62,7 @@ namespace e5 {
              * execute this handler
              * @param message Message buffer containing the text to print
              */
-            explicit PrintHandler(const ContextManagerPtr &ctx,
+            explicit PrintHandler(const AsyncCtx &ctx,
                                   std::unique_ptr<std::string> message);
 
             /**
@@ -77,7 +77,7 @@ namespace e5 {
              * @param message The message buffer to print
              * @return A pointer to the created PrintHandler
              */
-            static void create(const ContextManagerPtr &ctx,
+            static void create(const AsyncCtx &ctx,
                                std::unique_ptr<std::string> message) {
                 auto handler =
                     std::make_unique<PrintHandler>(ctx, std::move(message));

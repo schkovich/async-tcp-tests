@@ -69,7 +69,7 @@ namespace e5 {
              * @param qotd_buffer Reference to the quote buffer for storing
              * received data
              */
-            explicit EchoReceivedHandler(const ContextManagerPtr &ctx,
+            explicit EchoReceivedHandler(const AsyncCtx &ctx,
                                          TcpClient &io,
                                          SerialPrinter &serial_printer,
                                          QuoteBuffer &qotd_buffer)

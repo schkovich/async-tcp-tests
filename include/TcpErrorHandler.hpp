@@ -58,7 +58,7 @@ namespace e5 {
              * @param written Bytes written before error
              * @param error Error code from TCP layer
              */
-            TcpErrorHandler(const ContextManagerPtr& ctx,
+            TcpErrorHandler(const AsyncCtx & ctx,
                            TcpClient& io,
                            std::unique_ptr<std::string> data,
                            size_t written,

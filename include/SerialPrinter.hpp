@@ -13,7 +13,7 @@
 
 namespace e5 {
 
-    using async_tcp::ContextManagerPtr;
+    using async_tcp::AsyncCtx;
 
     /**
      * @class SerialPrinter
@@ -25,7 +25,7 @@ namespace e5 {
      */
     class SerialPrinter {
 
-            const ContextManagerPtr
+            const AsyncCtx
                 &m_ctx; ///< Context manager for scheduling print operations
 
         public:
@@ -35,7 +35,7 @@ namespace e5 {
              *
              * @param ctx Shared context manager for synchronized execution
              */
-            explicit SerialPrinter(const ContextManagerPtr &ctx);
+            explicit SerialPrinter(const AsyncCtx &ctx);
 
             /**
              * @brief Prints a std::string to the serial port asynchronously

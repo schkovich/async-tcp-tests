@@ -21,7 +21,7 @@ namespace e5 {
      *
      * @param ctx Shared context manager for synchronized execution
      */
-    QuoteBuffer::QuoteBuffer(const ContextManagerPtr &ctx) : SyncBridge(ctx) {
+    QuoteBuffer::QuoteBuffer(const AsyncCtx &ctx) : SyncBridge(ctx) {
         // Initialize with an empty string to ensure it's properly
         // null-terminated
         m_buffer.clear();

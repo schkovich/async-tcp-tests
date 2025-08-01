@@ -82,7 +82,7 @@ namespace e5 {
              *
              * @param ctx Shared context manager for synchronised execution
              */
-            explicit QuoteBuffer(const ContextManagerPtr &ctx);
+            explicit QuoteBuffer(const AsyncCtx &ctx);
 
             /**
              * @brief Sets the buffer content from a std::string

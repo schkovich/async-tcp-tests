@@ -43,7 +43,7 @@ namespace e5 {
      * @param worker
      * @param message Message to print
      */
-    PrintHandler::PrintHandler(const ContextManagerPtr &ctx,
+    PrintHandler::PrintHandler(const AsyncCtx &ctx,
                                std::unique_ptr<std::string> message)
         : EventBridge(ctx), m_message(std::move(message)) {}
 } // namespace e5

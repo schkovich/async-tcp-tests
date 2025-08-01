@@ -17,7 +17,7 @@ namespace e5 {
     std::atomic<bool> SerialPrinter::print_lock{false};
 
     // Constructor implementation
-    SerialPrinter::SerialPrinter(const ContextManagerPtr &ctx) : m_ctx(ctx) {}
+    SerialPrinter::SerialPrinter(const AsyncCtx &ctx) : m_ctx(ctx) {}
 
     // Print method implementation for std::string
     uint32_t SerialPrinter::print(std::unique_ptr<std::string> message) {

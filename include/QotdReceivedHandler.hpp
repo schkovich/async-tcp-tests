@@ -73,7 +73,7 @@ namespace e5 {
              * quote will be stored
              * @param io Reference to the TCP client that received the data
              */
-            explicit QotdReceivedHandler(const ContextManagerPtr &ctx,
+            explicit QotdReceivedHandler(const AsyncCtx &ctx,
                                          QuoteBuffer &quote_buffer,
                                          TcpClient &io)
                 : EventBridge(ctx), m_quote_buffer(quote_buffer), m_io(io) {}

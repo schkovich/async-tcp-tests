@@ -11,7 +11,7 @@
 
 namespace e5 {
 
-    TcpErrorHandler::TcpErrorHandler(const ContextManagerPtr& ctx,
+    TcpErrorHandler::TcpErrorHandler(const AsyncCtx & ctx,
                                     TcpClient& io,
                                     std::unique_ptr<std::string> data,
                                     size_t written,

@@ -33,6 +33,7 @@
 #include <algorithm>
 #include <iostream>
 
+using namespace async_tcp;
 /**
  * Allocate separate 8KB stack for core1
  *
@@ -59,16 +60,16 @@ constexpr uint16_t qotd_port = QOTD_PORT; // QOTD service port
 constexpr uint16_t echo_port = ECHO_PORT; // Echo service port
 
 // TCP clients
-async_tcp::TcpClient qotd_client;
-async_tcp::TcpClient echo_client;
+TcpClient qotd_client;
+TcpClient echo_client;
 
 // IP addresses
 IPAddress qotd_ip_address;
 IPAddress echo_ip_address;
 
 // Global asynchronous context managers for each core
-std::unique_ptr<async_tcp::ContextManager> ctx0 = std::make_unique<async_tcp::ContextManager>(); // Core 0
-std::unique_ptr<async_tcp::ContextManager> ctx1 = std::make_unique<async_tcp::ContextManager>(); // Core 1
+static AsyncCtx ctx0 = {}; // Core 0
+static AsyncCtx ctx1 = {}; // Core 1
 
 // Thread-safe buffer for storing the quote
 e5::QuoteBuffer qotd_buffer(ctx1);
@@ -223,12 +224,12 @@ void print_stack_stats() {
 
     auto config = async_context_threadsafe_background_default_config();
     config.custom_alarm_pool = alarm_pool_create_with_unused_hardware_alarm(16);
-    if (!ctx0->initDefaultContext(config)) {
+    if (!ctx0.initDefaultContext(config)) {
         panic_compact("CTX init failed on Core 0\n");
     }
 
     // Create TcpWriter locally and transfer ownership to the echo client
-    auto echo_writer = std::make_unique<async_tcp::TcpWriter>(ctx0, echo_client);
+    auto echo_writer = std::make_unique<TcpWriter>(ctx0, echo_client);
     echo_client.setWriter(std::move(echo_writer));
 
     auto echo_connected_handler = std::make_unique<e5::EchoConnectedHandler>(
@@ -268,7 +269,7 @@ void print_stack_stats() {
     }
 
     if (auto config = async_context_threadsafe_background_default_config();
-        !ctx1->initDefaultContext(config)) {
+        !ctx1.initDefaultContext(config)) {
         panic_compact("CTX init failed on Core 1\n");
     }
 

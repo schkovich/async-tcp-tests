@@ -68,7 +68,7 @@ namespace e5 {
              * @param serial_printer Reference to the serial printer for output
              * messages
              */
-            explicit EchoConnectedHandler(const ContextManagerPtr &ctx,
+            explicit EchoConnectedHandler(const AsyncCtx &ctx,
                                           TcpClient &io,
                                           SerialPrinter &serial_printer)
                 : EventBridge(ctx), m_io(io), m_serial_printer(serial_printer) {

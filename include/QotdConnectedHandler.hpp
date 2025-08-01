@@ -74,7 +74,7 @@ namespace e5 {
              * messages
              * @param quote_buffer
              */
-            explicit QotdConnectedHandler(const ContextManagerPtr &ctx,
+            explicit QotdConnectedHandler(const AsyncCtx &ctx,
                                           TcpClient &io,
                                           SerialPrinter &serial_printer,
                                           QuoteBuffer &quote_buffer)

@@ -74,7 +74,7 @@ namespace e5 {
              * @param serial_printer Reference to the serial printer for output
              * notifications
              */
-            explicit QotdClosedHandler(const ContextManagerPtr &ctx,
+            explicit QotdClosedHandler(const AsyncCtx &ctx,
                                        QuoteBuffer &quote_buffer,
                                        SerialPrinter &serial_printer)
                 : EventBridge(ctx), m_serial_printer(serial_printer),
