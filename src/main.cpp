@@ -28,10 +28,10 @@
 #include "SerialPrinter.hpp"
 #include "TcpClient.hpp"
 #include "TcpWriter.hpp"
+#include "LoopScheduler.hpp"
 #include "secrets.h" // Contains STASSID, STAPSK, QOTD_HOST, ECHO_HOST, QOTD_PORT, ECHO_PORT
 #include <WiFi.h>
 #include <algorithm>
-#include <iostream>
 
 using namespace async_tcp;
 /**
@@ -47,7 +47,7 @@ bool core1_separate_stack = true;
 
 volatile bool operational = false; // Global flag for core synchronization
 volatile bool ctx1_ready = false;  // For loop() to wait for setup1()
-
+volatile bool qotd_in_progress = false;
 // WiFi credentials from secrets.h
 const auto *ssid = STASSID;
 const auto *password = STAPSK;
@@ -78,19 +78,12 @@ e5::QuoteBuffer qotd_buffer(ctx1);
 e5::SerialPrinter serial_printer(ctx1);
 
 // Timing variables
-unsigned long previous_qotd = 0;    // Last time QOTD was requested
-unsigned long previous_echo = 0; // Last time echo was sent
-unsigned long previous_stack_0 = 0;   // Last time heap stats were printed
-unsigned long previous_stack_1 = 0; // Last time stack stats for core 1 were printed
-unsigned long previous_heap = 0;
-
-// Constants for intervals
-constexpr long qotd_interval = 555; // Interval for QOTD requests (milliseconds)
-constexpr long echo_interval =
-    333; // Interval for echo requests (milliseconds)
-constexpr long stack_0_interval = 1111; // Interval for heap stats (milliseconds)
-constexpr unsigned long stack_1_interval = 1010;
-constexpr unsigned long heap_interval = 777; // Interval for heap stats (milliseconds)
+static e5::LoopScheduler scheduler;
+static const std::string qotd = "qotd";
+static const std::string echo = "echo";
+static const std::string stack_0 = "stack_0";
+static const std::string stack_1 = "stack_1";
+static const std::string heap = "heap";
 
 /**
  * @brief Connects to the "quote of the day" server and initiates a connection.
@@ -105,14 +98,16 @@ void get_quote_of_the_day() {
 
     if (buffer_content.empty()) {
         // Check if we're already connected first
-        if (qotd_client.connected()) {
+        if (qotd_in_progress) {
             DEBUGWIRE("QOTD client already connected, skipping new connection\n");
             return;
         }
         // Buffer is empty, safe to get a new quote
         DEBUGWIRE(
             "Quote buffer is empty, connecting to QOTD server for new quote\n");
+        qotd_in_progress = true;
         if (!qotd_client.connect(qotd_ip_address, qotd_port)) {
+            qotd_in_progress = false;
             DEBUGV("Failed to connect to QOTD server.\n");
         }
     } else {
@@ -203,7 +198,7 @@ void print_stack_stats() {
 /**
  * @brief Initializes the Wi-Fi connection and asynchronous context on Core 0.
  */
-[[maybe_unused]] void setup() {
+void setup() {
     Serial1.begin(115200);
     while (!Serial1) {
         tight_loop_contents();
@@ -219,8 +214,8 @@ void print_stack_stats() {
         rp2040.reboot();
     }
 
-    hostByName(qotd_host, qotd_ip_address, 2000);
-    hostByName(echo_host, echo_ip_address, 2000);
+    hostByName(qotd_host, qotd_ip_address, 1000);
+    hostByName(echo_host, echo_ip_address, 1000);
 
     auto config = async_context_threadsafe_background_default_config();
     config.custom_alarm_pool = alarm_pool_create_with_unused_hardware_alarm(16);
@@ -253,9 +248,15 @@ void print_stack_stats() {
     qotd_client.setOnReceivedCallback(std::move(qotd_received_handler));
 
     auto qotd_closed_handler = std::make_unique<e5::QotdClosedHandler>(
-        ctx0, qotd_buffer, serial_printer);
+        ctx0, qotd_buffer, qotd_in_progress);
     qotd_closed_handler->initialisePerpetualBridge();
     qotd_client.setOnClosedCallback(std::move(qotd_closed_handler));
+
+    scheduler.setEntry(qotd, 7070);
+    scheduler.setEntry(echo, 1111);
+    scheduler.setEntry(stack_0, 7070707);
+    scheduler.setEntry(stack_1, 9090909);
+    scheduler.setEntry(heap, 8080808);
 
     operational = true;
 }
@@ -263,7 +264,7 @@ void print_stack_stats() {
 /**
  * @brief Initializes the asynchronous context on Core 1.
  */
-[[maybe_unused]] void setup1() {
+void setup1() {
     while (!operational) {
         tight_loop_contents();
     }
@@ -280,29 +281,16 @@ void print_stack_stats() {
  * @brief Main loop function on Core 0.
  * Handles periodic requests to the QOTD and echo servers.
  */
-[[maybe_unused]] void loop() {
+void loop() {
 
     if (!ctx1_ready) {
         delay(1);
         return;
     }
 
-    const unsigned long currentMillis = millis();
-
-    if (currentMillis - previous_qotd >= qotd_interval) {
-        previous_qotd = currentMillis;
-        get_quote_of_the_day();
-    }
-
-    if (currentMillis - previous_echo >= echo_interval) {
-        previous_echo = currentMillis;
-        get_echo();
-    }
-
-    if (currentMillis - previous_stack_0 >= stack_0_interval) {
-        previous_stack_0 = currentMillis;
-        print_stack_stats();
-    }
+    if (scheduler.timeToRun(qotd)) get_quote_of_the_day();
+    if (scheduler.timeToRun(echo)) get_echo();
+    if (scheduler.timeToRun(stack_0)) print_stack_stats();
 }
 
 /**
@@ -310,16 +298,6 @@ void print_stack_stats() {
  * Currently empties as all work is handled through the async context.
  */
 void loop1() {
-    unsigned long currentMillis = millis();
-
-    if (currentMillis - previous_stack_1 >= stack_1_interval) {
-        previous_stack_1 = currentMillis;
-        print_stack_stats();
-    }
-
-    if (currentMillis - previous_heap >= heap_interval) {
-        previous_heap = currentMillis;
-        print_heap_stats();
-    }
-
+    if (scheduler.timeToRun(stack_1)) print_stack_stats();
+    if (scheduler.timeToRun(heap)) print_heap_stats();
 }

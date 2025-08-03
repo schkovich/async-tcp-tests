@@ -41,13 +41,13 @@ namespace e5 {
     void QotdClosedHandler::onWork() {
         // Get the complete quote
         std::string complete_quote = m_quote_buffer.get();
-
         // Log receipt of complete quote
         DEBUGWIRE("[QOTD] Connection closed. Received (%d bytes)\n",
                   complete_quote.size());
 
         // Append a marker to the buffer to indicate the quote is complete.
         m_quote_buffer.append("\n--- End of Quote ---\n");
+        m_qotd_in_progress = false;
     }
 
 } // namespace e5

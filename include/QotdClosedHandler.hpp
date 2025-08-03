@@ -40,10 +40,11 @@ namespace e5 {
      * complete quote has been received.
      */
     class QotdClosedHandler final : public EventBridge {
-            SerialPrinter &m_serial_printer; /**< Reference to the serial
-                                                printer for output. */
             QuoteBuffer
                 &m_quote_buffer; /**< Buffer storing the received quote data. */
+
+            volatile bool &m_qotd_in_progress; /**< Reference to the serial
+                                                printer for output. */
 
         protected:
             /**
@@ -76,9 +77,9 @@ namespace e5 {
              */
             explicit QotdClosedHandler(const AsyncCtx &ctx,
                                        QuoteBuffer &quote_buffer,
-                                       SerialPrinter &serial_printer)
-                : EventBridge(ctx), m_serial_printer(serial_printer),
-                  m_quote_buffer(quote_buffer) {}
+                                       volatile bool &qotd_in_progress)
+                : EventBridge(ctx), m_quote_buffer(quote_buffer),
+                  m_qotd_in_progress(qotd_in_progress) {}
     };
 
 } // namespace e5
