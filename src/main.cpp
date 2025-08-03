@@ -136,26 +136,12 @@ void get_echo() {
 
         // Only process non-empty buffers
         if (!buffer_content.empty()) {
-            // Check if the buffer contains a complete quote.
-            constexpr auto marker = e5::QuoteBuffer::END_OF_QUOTE_MARKER;
-            if (const size_t marker_pos =
-                    buffer_content.find(marker);
-                marker_pos != std::string::npos) {
-                DEBUGWIRE("Found complete quote with End of Quote marker at "
-                          "position %d\n",
-                          marker_pos);
-
-                // Send full quote via standard TcpClient interface
-                // This will automatically delegate to the registered TcpWriter
-                DEBUGWIRE("Sending complete quote to echo server (%d bytes)\n", buffer_content.size());
-                size_t sent = echo_client.write(reinterpret_cast<const uint8_t*>(buffer_content.c_str()), buffer_content.size());
-                if (sent < buffer_content.size()) {
-                    DEBUGWIRE("[ERROR] echo_client.write sent only %u/%u bytes\n", sent, buffer_content.size());
-                }
-            } else {
-                // Quote is incomplete yet, waiting for more data
-                DEBUGWIRE("Quote in buffer is not complete yet (no End of "
-                          "Quote marker)\n");
+            // Send full quote via standard TcpClient interface
+            // This will automatically delegate to the registered TcpWriter
+            DEBUGWIRE("Sending quote to echo server (%d bytes)\n", buffer_content.size());
+            size_t sent = echo_client.write(reinterpret_cast<const uint8_t*>(buffer_content.c_str()), buffer_content.size());
+            if (sent < buffer_content.size()) {
+                DEBUGWIRE("[ERROR] echo_client.write sent only %u/%u bytes\n", sent, buffer_content.size());
             }
         }
     }

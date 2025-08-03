@@ -35,17 +35,10 @@ namespace e5 {
         const char *data = m_io.peekBuffer();
         // Print any incoming echo data
         std::string chunk(data, available);
-        // Accumulate buffer for marker detection
-        m_buffer.append(chunk);
         m_io.peekConsume(available);
-        // When end-of-quote marker is seen across any segments, clear buffer and quote
-        static const std::string marker = ::e5::QuoteBuffer::END_OF_QUOTE_MARKER;
-        if (m_buffer.find(marker) != std::string::npos) {
-            auto quote = std::make_unique<std::string>(m_buffer);
-                m_serial_printer.print(std::move(quote));
-            m_qotd_buffer.set("");
-            m_buffer.clear();
-        }
+        auto quote = std::make_unique<std::string>(chunk);
+        m_serial_printer.print(std::move(quote));
+        m_qotd_buffer.set("");
     }
 
 } // namespace e5

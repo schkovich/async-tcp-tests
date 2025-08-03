@@ -44,9 +44,6 @@ namespace e5 {
         // Log receipt of complete quote
         DEBUGWIRE("[QOTD] Connection closed. Received (%d bytes)\n",
                   complete_quote.size());
-
-        // Append a marker to the buffer to indicate the quote is complete.
-        m_quote_buffer.append("\n--- End of Quote ---\n");
         m_qotd_in_progress = false;
     }
 

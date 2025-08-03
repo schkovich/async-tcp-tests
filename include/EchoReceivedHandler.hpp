@@ -40,7 +40,6 @@ namespace e5 {
                                                 printer for output. */
             QuoteBuffer &m_qotd_buffer; /**< Reference to the quote buffer for
                                             storing received data. */
-            std::string m_buffer; // accumulate incoming data
 
         protected:
             /**
