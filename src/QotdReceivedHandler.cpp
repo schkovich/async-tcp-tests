@@ -46,7 +46,7 @@ namespace e5 {
                 // consume.
                 const std::string data(peek_buffer, available);
 
-                m_quote_buffer.append(data);
+                m_quote_buffer.set(data);
 
                 // Mark the data as consumed in the TCP buffer
                 m_io.peekConsume(available);

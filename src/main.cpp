@@ -102,7 +102,6 @@ void get_quote_of_the_day() {
         qotd_in_progress = false;
         DEBUGV("Failed to connect to QOTD server.\n");
     }
-    qotd_buffer.clear();
 }
 
 /**
