@@ -39,11 +39,6 @@ namespace e5 {
      * like printing.
      */
     void QotdClosedHandler::onWork() {
-        // Get the complete quote
-        std::string complete_quote = m_quote_buffer.get();
-        // Log receipt of complete quote
-        DEBUGWIRE("[QOTD] Connection closed. Received (%d bytes)\n",
-                  complete_quote.size());
         m_qotd_in_progress = false;
     }
 
