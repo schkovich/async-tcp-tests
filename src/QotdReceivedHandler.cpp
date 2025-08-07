@@ -50,11 +50,6 @@ namespace e5 {
 
                 // Mark the data as consumed in the TCP buffer
                 m_io.peekConsume(available);
-
-                DEBUGWIRE("[QOTD] Received %zu bytes: %.*s\n", available,
-                          std::min(static_cast<size_t>(32),
-                                   available), // Show at most 32 chars
-                          peek_buffer);
             }
         }
     }
