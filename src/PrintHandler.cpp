@@ -40,7 +40,6 @@ namespace e5 {
      * printer.
      *
      * @param ctx Context manager for execution
-     * @param worker
      * @param message Message to print
      */
     PrintHandler::PrintHandler(const AsyncCtx &ctx,
