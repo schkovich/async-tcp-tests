@@ -47,9 +47,7 @@ namespace e5 {
              * @param message std::string to print
              * @return PICO_OK on success, or error code on failure
              */
-            uint32_t print(std::unique_ptr<std::string> message);
-
-            static std::atomic<bool> print_lock; ///< Global serialization and re-entrancy guard
+            uint32_t print(std::unique_ptr<std::string> message) const;
     };
 
 } // namespace e5
