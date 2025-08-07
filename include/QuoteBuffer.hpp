@@ -37,7 +37,7 @@ namespace e5 {
      */
     class QuoteBuffer final : public SyncBridge {
 
-            std::string m_buffer{}; ///< The internal string buffer
+            std::string m_buffer; ///< The internal string buffer
 
             /**
              * @struct BufferPayload
@@ -117,8 +117,15 @@ namespace e5 {
              */
             void append(std::string data);
 
-            // Shared end-of-quote marker for QOTD protocol
-            static constexpr const char* END_OF_QUOTE_MARKER = "\n--- End of Quote ---\n";
+            /**
+             * @brief Returns true if the buffer is empty, false otherwise.
+             */
+            bool empty();
+
+            /**
+             * @brief Clears the buffer content.
+             */
+            void clear();
     };
 
 } // namespace e5

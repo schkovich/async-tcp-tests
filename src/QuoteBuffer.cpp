@@ -21,11 +21,7 @@ namespace e5 {
      *
      * @param ctx Shared context manager for synchronized execution
      */
-    QuoteBuffer::QuoteBuffer(const AsyncCtx &ctx) : SyncBridge(ctx) {
-        // Initialize with an empty string to ensure it's properly
-        // null-terminated
-        m_buffer.clear();
-    }
+    QuoteBuffer::QuoteBuffer(const AsyncCtx &ctx) : SyncBridge(ctx) {}
 
     /**
      * @brief Executes buffer operations in a thread-safe manner
@@ -122,6 +118,46 @@ namespace e5 {
             result != PICO_OK) {
             DEBUGV("[c%d][%llu][ERROR] QuoteBuffer::append() returned "
                    "error %d.\n",
+                   rp2040.cpuid(), time_us_64(), result);
+        }
+    }
+
+    /**
+     * @brief Checks if the buffer is empty
+     *
+     * This method checks if the current buffer content is empty.
+     * Thread-safe through SyncBridge integration, can be called from any core
+     * or interrupt context.
+     *
+     * @return true if the buffer is empty, false otherwise
+     */
+    bool QuoteBuffer::empty() {
+        std::string result_string;
+        auto payload = std::make_unique<BufferPayload>();
+        payload->op = BufferPayload::GET;
+        payload->result_ptr = &result_string;
+        if (const auto result = execute(std::move(payload));
+            result != PICO_OK) {
+            DEBUGV("[c%d][%llu][ERROR] QuoteBuffer::empty() returned error %d.\n",
+                   rp2040.cpuid(), time_us_64(), result);
+        }
+        return result_string.empty();
+    }
+
+    /**
+     * @brief Clears the buffer content
+     *
+     * This method removes the current buffer content, making the buffer empty.
+     * Thread-safe through SyncBridge integration, can be called from any core
+     * or interrupt context.
+     */
+    void QuoteBuffer::clear() {
+        auto payload = std::make_unique<BufferPayload>();
+        payload->op = BufferPayload::SET;
+        payload->data = "";
+        if (const auto result = execute(std::move(payload));
+            result != PICO_OK) {
+            DEBUGV("[c%d][%llu][ERROR] QuoteBuffer::clear() returned error %d.\n",
                    rp2040.cpuid(), time_us_64(), result);
         }
     }
