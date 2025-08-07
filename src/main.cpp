@@ -39,15 +39,13 @@ using namespace async_tcp;
  *
  * When false: 8KB stack is split between cores (4KB each)
  * When true:  Each core gets its own 8KB stack
- *
- * Required for reliable dual-core operation with network stack
- * and temperature monitoring running on separate cores.
  */
 bool core1_separate_stack = true;
 
 volatile bool operational = false; // Global flag for core synchronization
 volatile bool ctx1_ready = false;  // For loop() to wait for setup1()
 volatile bool qotd_in_progress = false;
+volatile bool echo_connected = false;
 // WiFi credentials from secrets.h
 const auto *ssid = STASSID;
 const auto *password = STAPSK;
@@ -56,8 +54,8 @@ WiFiMulti multi;
 // Server details
 const auto *qotd_host = QOTD_HOST;
 const auto *echo_host = ECHO_HOST;
-constexpr uint16_t qotd_port = QOTD_PORT; // QOTD service port
-constexpr uint16_t echo_port = ECHO_PORT; // Echo service port
+constexpr uint16_t qotd_port = QOTD_PORT;
+constexpr uint16_t echo_port = ECHO_PORT;
 
 // TCP clients
 TcpClient qotd_client;
@@ -68,8 +66,8 @@ IPAddress qotd_ip_address;
 IPAddress echo_ip_address;
 
 // Global asynchronous context managers for each core
-static AsyncCtx ctx0 = {}; // Core 0
-static AsyncCtx ctx1 = {}; // Core 1
+static AsyncCtx ctx0 = {}; // TCP Client Core 0
+static AsyncCtx ctx1 = {}; // SerialPrinter and QuoteBuffer on Core 1
 
 // Thread-safe buffer for storing the quote
 e5::QuoteBuffer qotd_buffer(ctx1);
@@ -78,7 +76,8 @@ e5::QuoteBuffer qotd_buffer(ctx1);
 e5::SerialPrinter serial_printer(ctx1);
 
 // Timing variables
-static e5::LoopScheduler scheduler;
+static e5::LoopScheduler scheduler0; // For Core 0
+static e5::LoopScheduler scheduler1; // For Core 1
 static const std::string qotd = "qotd";
 static const std::string echo = "echo";
 static const std::string stack_0 = "stack_0";
@@ -88,61 +87,46 @@ static const std::string heap = "heap";
 /**
  * @brief Connects to the "quote of the day" server and initiates a connection.
  *
- * This function only connects to the QOTD server if the quote buffer is empty,
- * ensuring that we don't get a new quote until the current one has been
- * fully processed by the echo server.
+ * Connects to the QOTD server if there isn't another active connection.
  */
 void get_quote_of_the_day() {
-    // Check if the buffer is empty before getting a new quote
-    const std::string buffer_content = qotd_buffer.get();
-
-    if (buffer_content.empty()) {
-        // Check if we're already connected first
-        if (qotd_in_progress) {
-            DEBUGWIRE("QOTD client already connected, skipping new connection\n");
-            return;
-        }
-        // Buffer is empty, safe to get a new quote
-        DEBUGWIRE(
-            "Quote buffer is empty, connecting to QOTD server for new quote\n");
-        qotd_in_progress = true;
-        if (!qotd_client.connect(qotd_ip_address, qotd_port)) {
-            qotd_in_progress = false;
-            DEBUGV("Failed to connect to QOTD server.\n");
-        }
-    } else {
-        // Buffer still has content, wait until it's processed
-        DEBUGWIRE("Quote buffer still has content (%d bytes), skipping QOTD "
-                  "request\n",
-                  buffer_content.size());
+    // Check if we're already connected first
+    if (qotd_in_progress) {
+        DEBUGWIRE("QOTD client already connected, skipping new connection\n");
+        return;
     }
+    DEBUGWIRE(
+        "Connecting to QOTD server for new quote\n");
+    qotd_in_progress = true;
+    if (!qotd_client.connect(qotd_ip_address, qotd_port)) {
+        qotd_in_progress = false;
+        DEBUGV("Failed to connect to QOTD server.\n");
+    }
+    qotd_buffer.clear();
 }
 
 /**
  * @brief Connects to the echo server and sends data if available.
  *
  * This function checks if the echo client is connected. If not, it attempts to
- * connect. If connected and there is data in the transmission buffer, it checks
- * if the data contains the "End of Quote" marker indicating a complete quote
- * before sending.
+ * connect. If connected and there is data in the transmission buffer.
  */
 void get_echo() {
-    if (!echo_client.connected()) {
-        if (0 == echo_client.connect(echo_ip_address, echo_port)) {
-            DEBUGV("Failed to connect to echo server..\n");
-        }
-    } else {
-        const std::string buffer_content = qotd_buffer.get();
-
-        // Only process non-empty buffers
-        if (!buffer_content.empty()) {
-            // Send full quote via standard TcpClient interface
-            // This will automatically delegate to the registered TcpWriter
-            DEBUGWIRE("Sending quote to echo server (%d bytes)\n", buffer_content.size());
-            size_t sent = echo_client.write(reinterpret_cast<const uint8_t*>(buffer_content.c_str()), buffer_content.size());
-            if (sent < buffer_content.size()) {
-                DEBUGWIRE("[ERROR] echo_client.write sent only %u/%u bytes\n", sent, buffer_content.size());
+    const std::string buffer_content = qotd_buffer.get();
+    if (!buffer_content.empty()) {
+        if (!echo_connected) {
+            if (0 == echo_client.connect(echo_ip_address, echo_port)) {
+                DEBUGV("Failed to connect to echo server..\n");
+                return;
             }
+            echo_connected = true;
+        }
+        DEBUGWIRE("Sending quote to echo server (%d bytes)\n", buffer_content.size());
+        if (const size_t sent = echo_client.write(
+                reinterpret_cast<const uint8_t *>(buffer_content.c_str()),
+                buffer_content.size());
+            sent < buffer_content.size()) {
+            DEBUGWIRE("[ERROR] echo_client.write sent only %u/%u bytes\n", sent, buffer_content.size());
         }
     }
 }
@@ -238,11 +222,9 @@ void setup() {
     qotd_closed_handler->initialisePerpetualBridge();
     qotd_client.setOnClosedCallback(std::move(qotd_closed_handler));
 
-    scheduler.setEntry(qotd, 7070);
-    scheduler.setEntry(echo, 1111);
-    scheduler.setEntry(stack_0, 7070707);
-    scheduler.setEntry(stack_1, 9090909);
-    scheduler.setEntry(heap, 8080808);
+    scheduler0.setEntry(qotd, 1010);
+    scheduler0.setEntry(echo, 101);
+    scheduler0.setEntry(stack_0, 707070);
 
     operational = true;
 }
@@ -260,6 +242,8 @@ void setup1() {
         panic_compact("CTX init failed on Core 1\n");
     }
 
+    scheduler1.setEntry(stack_1, 909090);
+    scheduler1.setEntry(heap, 808080);
     ctx1_ready = true;
 }
 
@@ -274,9 +258,9 @@ void loop() {
         return;
     }
 
-    if (scheduler.timeToRun(qotd)) get_quote_of_the_day();
-    if (scheduler.timeToRun(echo)) get_echo();
-    if (scheduler.timeToRun(stack_0)) print_stack_stats();
+    if (scheduler0.timeToRun(qotd)) get_quote_of_the_day();
+    if (scheduler0.timeToRun(echo)) get_echo();
+    if (scheduler0.timeToRun(stack_0)) print_stack_stats();
 }
 
 /**
@@ -284,6 +268,6 @@ void loop() {
  * Currently empties as all work is handled through the async context.
  */
 void loop1() {
-    if (scheduler.timeToRun(stack_1)) print_stack_stats();
-    if (scheduler.timeToRun(heap)) print_heap_stats();
+    if (scheduler1.timeToRun(stack_1)) print_stack_stats();
+    if (scheduler1.timeToRun(heap)) print_heap_stats();
 }

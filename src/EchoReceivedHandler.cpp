@@ -12,7 +12,6 @@
  */
 
 #include "EchoReceivedHandler.hpp"
-#include "QuoteBuffer.hpp"  // for END_OF_QUOTE_MARKER
 #include <string>
 
 namespace e5 {
@@ -38,7 +37,6 @@ namespace e5 {
         m_io.peekConsume(available);
         auto quote = std::make_unique<std::string>(chunk);
         m_serial_printer.print(std::move(quote));
-        m_qotd_buffer.set("");
     }
 
 } // namespace e5
