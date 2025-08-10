@@ -32,6 +32,7 @@
 #include "secrets.h" // Contains STASSID, STAPSK, QOTD_HOST, ECHO_HOST, QOTD_PORT, ECHO_PORT
 #include <WiFi.h>
 #include <algorithm>
+#include <cmath>
 
 using namespace async_tcp;
 /**
@@ -83,6 +84,26 @@ static const std::string echo = "echo";
 static const std::string stack_0 = "stack_0";
 static const std::string stack_1 = "stack_1";
 static const std::string heap = "heap";
+static const std::string board_temperature = "temperature";
+/**
+ * Reads the board temperature from internal temperature sensor
+ * @return Temperature value in Celsius
+ */
+float readBoardTemperature() {
+    return analogReadTemp();
+}
+
+/**
+ * Formats temperature reading into a display string
+ * @param temperature Temperature value in Celsius
+ * @return Formatted string with temperature reading and units
+ */
+std::string formatTemperatureMessage(const float temperature) {
+    const std::string prefix = "Temperature in The Factory: ";
+    const std::string suffix = "°C.\n";
+    const auto tempStr = std::to_string(lround(temperature));
+    return prefix + tempStr + suffix;
+}
 
 /**
  * @brief Connects to the "quote of the day" server and initiates a connection.
@@ -164,6 +185,16 @@ void print_stack_stats() {
     serial_printer.print(std::move(stack_stats));
 }
 
+void print_board_temperature() {
+    // Read the board temperature
+    const float temperature = readBoardTemperature();
+    // Format the message
+    auto temperature_message = std::make_unique<std::string>(
+        formatTemperatureMessage(temperature));
+    // Print the message using SerialPrinter
+    serial_printer.print(std::move(temperature_message));
+}
+
 /**
  * @brief Initializes the Wi-Fi connection and asynchronous context on Core 0.
  */
@@ -221,9 +252,11 @@ void setup() {
     qotd_closed_handler->initialisePerpetualBridge();
     qotd_client.setOnClosedCallback(std::move(qotd_closed_handler));
 
-    scheduler0.setEntry(qotd, 1010);
+    scheduler0.setEntry(qotd, 505);
     scheduler0.setEntry(echo, 101);
-    scheduler0.setEntry(stack_0, 707070);
+    scheduler0.setEntry(stack_0, 70707);
+
+    pinMode(LED_BUILTIN, OUTPUT);
 
     operational = true;
 }
@@ -243,6 +276,7 @@ void setup1() {
 
     scheduler1.setEntry(stack_1, 909090);
     scheduler1.setEntry(heap, 808080);
+    scheduler1.setEntry(board_temperature, 606060);
     ctx1_ready = true;
 }
 
@@ -269,4 +303,5 @@ void loop() {
 void loop1() {
     if (scheduler1.timeToRun(stack_1)) print_stack_stats();
     if (scheduler1.timeToRun(heap)) print_heap_stats();
+    if (scheduler1.timeToRun(board_temperature)) print_board_temperature();
 }
