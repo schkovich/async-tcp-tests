@@ -36,9 +36,8 @@ namespace e5 {
      * like printing.
      */
     void QotdConnectedHandler::onWork() {
-        // Configure connection parameters
-        m_io.keepAlive();
-        m_io.setNoDelay(true); // Disable Nagle's algorithm for lower latency
+        // No need to configure keep-alive or Nagle's algorithm for QOTD connection
+        // (keep-alive is disabled by default, and there are no writes)
 
         auto notify_connect = std::make_unique<std::string>(
             std::string("QOTD client connected. Local IP: ")
