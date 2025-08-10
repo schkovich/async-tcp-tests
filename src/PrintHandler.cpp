@@ -32,6 +32,7 @@ namespace e5 {
     void  PrintHandler::onWork() {
         if (!m_message->empty()) {
             Serial1.print(m_message->c_str());
+            digitalWrite(LED_BUILTIN, LOW);
         }
     }
 
