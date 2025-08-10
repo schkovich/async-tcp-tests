@@ -33,10 +33,10 @@ namespace e5 {
         if (available == 0) return;
         const char *data = m_io.peekBuffer();
         // Print any incoming echo data
-        std::string chunk(data, available);
-        m_io.peekConsume(available);
-        auto quote = std::make_unique<std::string>(chunk);
+        auto quote = std::make_unique<std::string>(data);
+        quote->push_back('\n');
         m_serial_printer.print(std::move(quote));
+        m_io.peekConsume(available);
     }
 
 } // namespace e5
