@@ -99,7 +99,7 @@ float readBoardTemperature() {
  * @return Formatted string with temperature reading and units
  */
 std::string formatTemperatureMessage(const float temperature) {
-    const std::string prefix = "Temperature in The Factory: ";
+    const std::string prefix = "[INFO] Temperature in The Factory: ";
     const std::string suffix = "°C.\n";
     const auto tempStr = std::to_string(lround(temperature));
     return prefix + tempStr + suffix;
@@ -113,15 +113,19 @@ std::string formatTemperatureMessage(const float temperature) {
 void get_quote_of_the_day() {
     // Check if we're already connected first
     if (qotd_in_progress) {
-        DEBUGWIRE("QOTD client already connected, skipping new connection\n");
+        DEBUGCORE("[DEBUG] QOTD client already connected, skipping.\n");
+        auto notify = std::make_unique<std::string>(
+            "[DEBUG] QOTD client already connected, skipping.\n");
+        serial_printer.print(std::move(notify));
         return;
     }
-    DEBUGWIRE(
-        "Connecting to QOTD server for new quote\n");
     qotd_in_progress = true;
     if (!qotd_client.connect(qotd_ip_address, qotd_port)) {
         qotd_in_progress = false;
-        DEBUGV("Failed to connect to QOTD server.\n");
+        DEBUGCORE("[ERROR] Failed to connect to QOTD server.\n");
+        auto notify = std::make_unique<std::string>(
+            "[ERROR] Failed to connect to QOTD server.\n");
+        serial_printer.print(std::move(notify));
     }
 }
 
@@ -136,17 +140,24 @@ void get_echo() {
     if (!buffer_content.empty()) {
         if (!echo_connected) {
             if (0 == echo_client.connect(echo_ip_address, echo_port)) {
-                DEBUGV("Failed to connect to echo server..\n");
+                DEBUGCORE("[ERROR] Failed to connect to echo server..\n");
+                auto notify = std::make_unique<std::string>(
+                    "[ERROR] Failed to connect to echo server..\n");
+                serial_printer.print(std::move(notify));
                 return;
             }
             echo_connected = true;
         }
-        DEBUGWIRE("Sending quote to echo server (%d bytes)\n", buffer_content.size());
-        if (const size_t sent = echo_client.write(
+
+        if (const size_t error = echo_client.write(
                 reinterpret_cast<const uint8_t *>(buffer_content.c_str()),
                 buffer_content.size());
-            sent < buffer_content.size()) {
-            DEBUGWIRE("[ERROR] echo_client.write sent only %u/%u bytes\n", sent, buffer_content.size());
+            error != PICO_OK) {
+            DEBUGCORE("[DEBUG] echo_client.write returned error %d\n", error);
+            auto notify = std::make_unique<std::string>(
+                    "[DEBUG][write] RESOURCE_IN_USE (" +
+                    std::to_string(error) + ")\n");
+            serial_printer.print(std::move(notify));
         }
     }
 }
@@ -162,7 +173,7 @@ void print_heap_stats() {
 
     // Format the string with stats using the same syntax as notify_connect
     auto heap_stats = std::make_unique<std::string>(
-        "Free: " + std::to_string(freeHeap) +
+        "[INFO] Free: " + std::to_string(freeHeap) +
         ", Used: " + std::to_string(usedHeap) +
         ", Total: " + std::to_string(totalHeap) + "\n");
 
@@ -180,7 +191,7 @@ void print_stack_stats() {
 
     // Format the string with stack for calling core stats
     auto stack_stats = std::make_unique<std::string>(
-        "Free Stack on core " + std::to_string(get_core_num()) + ": " +
+        "[INFO] Free Stack on core " + std::to_string(get_core_num()) + ": " +
         std::to_string(free_stack) + "\n");
     serial_printer.print(std::move(stack_stats));
 }
@@ -199,6 +210,7 @@ void print_board_temperature() {
  * @brief Initializes the Wi-Fi connection and asynchronous context on Core 0.
  */
 void setup() {
+
     Serial1.begin(115200);
     while (!Serial1) {
         tight_loop_contents();
@@ -252,9 +264,9 @@ void setup() {
     qotd_closed_handler->initialisePerpetualBridge();
     qotd_client.setOnClosedCallback(std::move(qotd_closed_handler));
 
-    scheduler0.setEntry(qotd, 505);
-    scheduler0.setEntry(echo, 101);
-    scheduler0.setEntry(stack_0, 70707);
+    scheduler0.setEntry(qotd, 432);
+    scheduler0.setEntry(echo, 257);
+    scheduler0.setEntry(stack_0, 3030);
 
     pinMode(LED_BUILTIN, OUTPUT);
 
@@ -274,9 +286,9 @@ void setup1() {
         panic_compact("CTX init failed on Core 1\n");
     }
 
-    scheduler1.setEntry(stack_1, 909090);
-    scheduler1.setEntry(heap, 808080);
-    scheduler1.setEntry(board_temperature, 606060);
+    scheduler1.setEntry(stack_1, 80808);
+    scheduler1.setEntry(heap, 70707);
+    scheduler1.setEntry(board_temperature, 50505);
     ctx1_ready = true;
 }
 

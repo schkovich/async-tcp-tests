@@ -42,7 +42,7 @@ namespace e5 {
         // Get the local IP address
         const std::string local_ip(m_io.localIP().toString().c_str());
         auto notify_connect = std::make_unique<std::string>(
-            "Echo client connected. Local IP: " + local_ip + "\n");
+            "[INFO] Echo client connected. Local IP: " + local_ip + "\n");
 
         m_serial_printer.print(std::move(notify_connect));
     }

@@ -40,7 +40,7 @@ namespace e5 {
         // (keep-alive is disabled by default, and there are no writes)
 
         auto notify_connect = std::make_unique<std::string>(
-            std::string("QOTD client connected. Local IP: ")
+            std::string("[INFO] QOTD client connected. Local IP: ")
             + m_io.localIP().toString().c_str()
             + "\n");
 
