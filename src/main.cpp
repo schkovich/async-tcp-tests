@@ -210,6 +210,12 @@ void print_board_temperature() {
  * @brief Initializes the Wi-Fi connection and asynchronous context on Core 0.
  */
 void setup() {
+    Serial.begin(); // baud rate is ignored for USB CDC
+    // Wait up to 1 second for Serial to become ready, but do not block indefinitely
+    for (int i = 0; i < 100; ++i) {
+        if (Serial) break;
+        delay(10);
+    }
 
     Serial1.begin(115200);
     while (!Serial1) {
