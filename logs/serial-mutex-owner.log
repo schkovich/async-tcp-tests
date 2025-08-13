@@ -1,0 +1,205 @@
+--- Terminal on /dev/ttyACM0 | 115200 8-N-1
+--- Available filters and text transformations: colorize, debug, default, direct, hexlify, log2file, nocontrol, printable, send_on_enter, time
+--- More details at https://bit.ly/pio-monitor-filters
+--- Quit: Ctrl+C | Menu: Ctrl+T | Help: Ctrl+T followed by Ctrl+H
+�C0 ready...
+C1 ready...
+Hello from cycle 3!
+Hello from cycle 6!
+Hello from cycle 9!
+Hello from cycle 12!
+Hello from cycle 15!
+[Counter 1][Enter at: 396535][Exit at: 396600]
+Hello from cycle 18!
+Hello from cycle 21!
+[Counter 2][Enter 415088] Exit 415117 from boot
+Hello from cycle 24!
+Hello from cycle 27!
+Hello from cycle 30!
+Hello from cycle 33!
+Counter 3; Enter 443048, Exit 443068 from boot
+Hello from cycle 36!
+Hello from cycle 39!
+Hello from cycle 42!
+Hello from cycle 45!
+Hello from cycle 48!
+[Counter 4][Enter at: 487496][Exit at: 487513]
+Hello from cycle 51!
+Hello from cycle 54!
+Hello from cycle 57!
+[Counter 5][Enter 506012] Exit 506031 from boot
+Hello from cycle 60!
+Hello from cycle 63!
+Hello from cycle 66!
+Counter 6; Enter 535725, Exit 535740 from boot
+Hello from cycle 69!
+Hello from cycle 72!
+Hello from cycle 75!
+Hello from cycle 78!
+Hello from cycle 81!
+Hello from cycle 84!
+[Counter 7][Enter at: 579954][Exit at: 579970]
+Hello from cycle 87!
+Hello from cycle 90!
+[Counter 8][Enter 598486] Exit 598501 from boot
+Hello from cycle 93!
+Hello from cycle 96!
+Hello from cycle 99!
+Hello from cycle 102!
+Counter 9; Enter 626415, Exit 626438 from boot
+Hello from cycle 105!
+Hello from cycle 108!
+Hello from cycle 111!
+Hello from cycle 114!
+Hello from cycle 117!
+[Counter 10][Enter at: 670890][Exit at: 670906]
+Hello from cycle 120!
+Hello from cycle 123!
+[Counter 11][Enter 689466] Exit 689480 from boot
+Hello from cycle 126!
+Hello from cycle 129!
+Hello from cycle 132!
+Hello from cycle 135!
+Counter 12; Enter 717506, Exit 717522 from boot
+Hello from cycle 138!
+Hello from cycle 141!
+Hello from cycle 144!
+Hello from cycle 147!
+Hello from cycle 150!
+[Counter 13][Enter at: 762132][Exit at: 762161]
+Hello from cycle 153!
+Hello from cycle 156!
+[Counter 14][Enter 780774] Exit 780794 from boot
+Hello from cycle 159!
+Hello from cycle 162!
+Hello from cycle 165!
+Hello from cycle 168!
+Counter 15; Enter 808797, Exit 808814 from boot
+Hello from cycle 171!
+Hello from cycle 174!
+Hello from cycle 177!
+Hello from cycle 180!
+Hello from cycle 183!
+[Counter 16][Enter at: 853415][Exit at: 853432]
+Hello from cycle 186!
+Hello from cycle 189!
+[Counter 17][Enter 871989] Exit 872005 from boot
+Hello from cycle 192!
+Hello from cycle 195!
+Hello from cycle 198!
+Hello from cycle 201!
+Counter 18; Enter 900019, Exit 900037 from boot
+Hello from cycle 204!
+Hello from cycle 207!
+Hello from cycle 210!
+Hello from cycle 213!
+Hello from cycle 216!
+[Counter 19][Enter at: 944631][Exit at: 944646]
+Hello from cycle 219!
+Hello from cycle 222!
+[Counter 20][Enter 963196] Exit 963214 from boot
+Hello from cycle 225!
+Hello from cycle 228!
+Hello from cycle 231!
+Hello from cycle 234!
+Counter 21; Enter 991216, Exit 991233 from boot
+Hello from cycle 237!
+Hello from cycle 240!
+Hello from cycle 243!
+Hello from cycle 246!
+Hello from cycle 249!
+[Counter 22][Enter at: 1035838][Exit at: 1035854]
+Hello from cycle 252!
+Hello from cycle 255!
+[Counter 23][Enter 1054590] Exit 1054606 from boot
+Hello from cycle 258!
+Hello from cycle 261!
+Hello from cycle 264!
+Hello from cycle 267!
+Counter 24; Enter 1082790, Exit 1082806 from boot
+Hello from cycle 270!
+Hello from cycle 273!
+Hello from cycle 276!
+Hello from cycle 279!
+Hello from cycle 282!
+Hello from cycle 285!
+[Counter 25][Enter at: 1127573][Exit at: 1127588]
+Hello from cycle 288!
+Hello from cycle 291!
+[Counter 26][Enter 1148211] Exit 1148226 from boot
+Hello from cycle 294!
+Hello from cycle 297!
+Hello from cycle 300!
+Hello from cycle 303!
+Counter 27; Enter 1176403, Exit 1176419 from boot
+Hello from cycle 306!
+Hello from cycle 309!
+Hello from cycle 312!
+Hello from cycle 315!
+Hello from cycle 318!
+Hello from cycle 321!
+[Counter 28][Enter at: 1221181][Exit at: 1221197]
+Hello from cycle 324!
+Hello from cycle 327!
+[Counter 29][Enter 1241810] Exit 1241826 from boot
+Hello from cycle 330!
+Hello from cycle 333!
+Hello from cycle 336!
+Hello from cycle 339!
+Counter 30; Enter 1270013, Exit 1270032 from boot
+Hello from cycle 342!
+Hello from cycle 345!
+Hello from cycle 348!
+Hello from cycle 351!
+Hello from cycle 354!
+Hello from cycle 357!
+[Counter 31][Enter at: 1314803][Exit at: 1314821]
+Hello from cycle 360!
+Hello from cycle 363!
+[Counter 32][Enter 1335418] Exit 1335434 from boot
+Hello from cycle 366!
+Hello from cycle 369!
+Hello from cycle 372!
+Hello from cycle 375!
+Counter 33; Enter 1363615, Exit 1363631 from boot
+Hello from cycle 378!
+Hello from cycle 381!
+Hello from cycle 384!
+Hello from cycle 387!
+Hello from cycle 390!
+Hello from cycle 393!
+[Counter 34][Enter at: 1408392][Exit at: 1408408]
+Hello from cycle 396!
+Hello from cycle 399!
+[Counter 35][Enter 1429010] Exit 1429025 from boot
+Hello from cycle 402!
+Hello from cycle 405!
+Hello from cycle 408!
+Hello from cycle 411!
+Counter 36; Enter 1457183, Exit 1457199 from boot
+Hello from cycle 414!
+Hello from cycle 417!
+Hello from cycle 420!
+Hello from cycle 423!
+Hello from cycle 426!
+Hello from cycle 429!
+[Counter 37][Enter at: 1501984][Exit at: 1501999]
+Hello from cycle 432!
+Hello from cycle 435!
+[Counter 38][Enter 1522617] Exit 1522633 from boot
+Hello from cycle 438!
+Hello from cycle 441!
+Hello from cycle 444!
+Hello from cycle 447!
+Counter 39; Enter 1550808, Exit 1550828 from boot
+Hello from cycle 450!
+Hello from cycle 453!
+Hello from cycle 456!
+Hello from cycle 459!
+Hello from cycle 462!
+Hello from cycle 465!
+
+*** PANIC ***
+
+Hard assert
+

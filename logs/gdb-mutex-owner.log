@@ -1,0 +1,264 @@
+Preparing firmware for debugging...
+Processing debug (board: nanorp2040connect; framework: arduino; platform: https://github.com/maxgerhardt/platform-raspberrypi.git)
+--------------------------------------------------------------------------------
+Verbose mode can be enabled via `-v, --verbose` option
+CONFIGURATION: https://docs.platformio.org/page/boards/raspberrypi/nanorp2040connect.html
+PLATFORM: Raspberry Pi RP2040 (1.16.0+sha.1f67f1e) > Arduino Nano RP2040 Connect
+HARDWARE: RP2040 133MHz, 256KB RAM, 2MB Flash
+DEBUG: Current (cmsis-dap) External (cmsis-dap, jlink, pico-debug, picoprobe, raspberrypi-swd)
+PACKAGES:
+ - framework-arduinopico @ 1.40504.0 (4.5.4)
+ - tool-picotool-rp2040-earlephilhower @ 5.140200.240929 (14.2.0)
+ - toolchain-rp2040-earlephilhower @ 5.140200.240929 (14.2.0)
+Warning: Undefined USBD_MAX_OWER_MA, assuming 500mA
+Flash size: 2.00MB
+Sketch size: 2.00MB
+Filesystem size: 0.00MB
+PSRAM size: 0.00MB
+Maximium Sketch size: 2093056 EEPROM start: 0x101ff000 Filesystem start: 0x101ff000 Filesystem end: 0x101ff000
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 68 compatible libraries
+Scanning dependencies...
+No dependencies
+Building in debug mode
+Compiling .pio/build/debug/FrameworkArduinoVariant/nina_pins.cpp.o
+Compiling .pio/build/debug/FrameworkArduinoBootloader/boot2_w25q080_2_padded_checksum.S.o
+Compiling .pio/build/debug/src/main.cpp.o
+Generating linkerscript /home/goran/CLionProjects/pico-sdk-tests/.pio/build/debug/memmap_default.ld
+Compiling .pio/build/debug/FrameworkArduino/BluetoothDebug.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/Bootsel.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/CoreMutex.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/FS.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/PIOProgram.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/RP2040Support.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/RP2040USB.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/Semihosting.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/SerialPIO.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/SerialUART.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/SerialUSB.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/StackThunk.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/Tone.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/WMath.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/_freertos.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/api/Common.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/api/IPAddress.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/api/PluggableUSB.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/api/Print.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/api/Stream.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/api/String.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/cyw43_wrappers.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/delay.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/gprof_gmon.c.o
+Compiling .pio/build/debug/FrameworkArduino/gprof_shim.S.o
+Compiling .pio/build/debug/FrameworkArduino/libb64/cdecode.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/libb64/cencode.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/lock.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/lwip_wrap.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/main.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/malloc-lock.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/posix.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/psram.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/rp2350-memcpy.S.o
+Compiling .pio/build/debug/FrameworkArduino/sdkoverride/btstack_flash_bank.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/sdkoverride/inet_chksum.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/sdkoverride/newlib_interface.c.o
+Compiling .pio/build/debug/FrameworkArduino/sdkoverride/pico_bootsel_via_double_reset.c.o
+Compiling .pio/build/debug/FrameworkArduino/stdlib_noniso.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/wiring_analog.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/wiring_digital.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/wiring_private.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/wiring_pulse.cpp.o
+Compiling .pio/build/debug/FrameworkArduino/wiring_shift.cpp.o
+Archiving .pio/build/debug/libFrameworkArduino.a
+Indexing .pio/build/debug/libFrameworkArduino.a
+Linking .pio/build/debug/firmware.elf
+Generating UF2 image
+picotool uf2 convert -t elf ".pio/build/debug/firmware.elf" ".pio/build/debug/firmware.uf2"
+Retrieving maximum program size .pio/build/debug/firmware.elf
+Flash size: 2.00MB
+Sketch size: 2.00MB
+Filesystem size: 0.00MB
+PSRAM size: 0.00MB
+Maximium Sketch size: 2093056 EEPROM start: 0x101ff000 Filesystem start: 0x101ff000 Filesystem end: 0x101ff000
+Checking size .pio/build/debug/firmware.elf
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [          ]   3.8% (used 10084 bytes from 262144 bytes)
+Flash: [          ]   3.5% (used 73116 bytes from 2093056 bytes)
+Building .pio/build/debug/firmware.bin
+Building .pio/build/debug/firmware.bin.signed
+========================= [SUCCESS] Took 6.19 seconds =========================
+
+Environment    Status    Duration
+-------------  --------  ------------
+debug          SUCCESS   00:00:06.190
+========================= 1 succeeded in 00:00:06.190 =========================
+Reading symbols from /home/goran/CLionProjects/pico-sdk-tests/.pio/build/debug/firmware.elf...
+PlatformIO Unified Debugger -> https://bit.ly/pio-debug
+PlatformIO: debug_tool = cmsis-dap
+PlatformIO: Initializing remote target...
+Open On-Chip Debugger 0.12.0+dev-gebec9504d-dirty (2024-09-29-16:26)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+Info : Hardware thread awareness created
+Info : Hardware thread awareness created
+adapter speed: 1000 kHz
+Info : tcl server disabled
+Info : telnet server disabled
+Info : Using CMSIS-DAPv2 interface with VID:PID=0x2e8a:0x000c, serial=E6632891E3688D33
+Info : CMSIS-DAP: SWD supported
+Info : CMSIS-DAP: Atomic commands supported
+Info : CMSIS-DAP: Test domain timer supported
+Info : CMSIS-DAP: FW Version = 2.0.0
+Info : CMSIS-DAP: Interface Initialised (SWD)
+Info : SWCLK/TCK = 0 SWDIO/TMS = 0 TDI = 0 TDO = 0 nTRST = 0 nRESET = 0
+Info : CMSIS-DAP: Interface ready
+Info : clock speed 1000 kHz
+Info : SWD DPIDR 0x0bc12477, DLPIDR 0x00000001
+Info : SWD DPIDR 0x0bc12477, DLPIDR 0x10000001
+Info : [rp2040.core0] Cortex-M0+ r0p1 processor detected
+Info : [rp2040.core0] target has 4 breakpoints, 2 watchpoints
+Info : [rp2040.core0] Examination succeed
+Info : [rp2040.core1] Cortex-M0+ r0p1 processor detected
+Info : [rp2040.core1] target has 4 breakpoints, 2 watchpoints
+Info : [rp2040.core1] Examination succeed
+Info : starting gdb server for rp2040.core0 on pipe
+Info : accepting 'gdb' connection from pipe
+Warn : [rp2040.core0] target was in unknown state when halt was requested
+Warn : [rp2040.core1] target was in unknown state when halt was requested
+Warn : Function FUNC_BOOTROM_STATE_RESET not found in RP2xxx ROM. (probably an RP2040 or an RP2350 A0)
+Warn : Function FUNC_FLASH_RESET_ADDRESS_TRANS not found in RP2xxx ROM. (probably an RP2040 or an RP2350 A0)
+Info : RP2040 Flash Probe: 33554432 bytes @0x10000000, in 8192 sectors
+
+Info : New GDB Connection: 1, Target rp2040.core0, state: halted
+__breakpoint () at /home/goran/CLionProjects/arduino-pico/pico-sdk/src/rp2040/pico_platform/include/pico/platform.h:130
+130	    pico_default_asm_volatile ("bkpt #0" : : : "memory");
+[rp2040.core0] halted due to debug-request, current mode: Thread
+xPSR: 0xf1000000 pc: 0x000000ea msp: 0x20041f00
+[rp2040.core1] halted due to debug-request, current mode: Thread
+xPSR: 0xf1000000 pc: 0x000000ea msp: 0x20041f00
+Info : Padding image section 0 at 0x100127c4 with 4 bytes
+Info : Padding image section 1 at 0x10014ca0 with 96 bytes (bank write end alignment)
+Warn : keep_alive() was not invoked in the 1000 ms timelimit. GDB alive packet not sent! (2521 ms). Workaround: increase "set remotetimeout" in GDB
+Warn : keep_alive() was not invoked in the 1000 ms timelimit. GDB alive packet not sent! (1704 ms). Workaround: increase "set remotetimeout" in GDB
+[rp2040.core0] halted due to breakpoint, current mode: Thread
+xPSR: 0xf1000000 pc: 0x000000ea msp: 0x20041f00
+[rp2040.core1] halted due to debug-request, current mode: Thread
+xPSR: 0xf1000000 pc: 0x000000ea msp: 0x20041f00
+[rp2040.core0] halted due to breakpoint, current mode: Thread
+xPSR: 0xf1000000 pc: 0x000000ea msp: 0x20041f00
+[rp2040.core1] halted due to debug-request, current mode: Thread
+xPSR: 0xf1000000 pc: 0x000000ea msp: 0x20041f00
+Note: automatically using hardware breakpoints for read-only addresses.
+PlatformIO: Initialization completed
+The target architecture is set to "auto" (currently "armv6s-m").
+warning: Invalid state, unable to determine sp alias, assuming msp.
+PlatformIO: Resume the execution to `debug_init_break = tbreak main`
+PlatformIO: More configuration options -> https://bit.ly/pio-debug
+[rp2040.core1] halted due to debug-request, current mode: Thread
+xPSR: 0x01000000 pc: 0x00000184 msp: 0x20041f00
+
+Thread 1 "rp2040.core0" hit Temporary breakpoint 1, main () at main.cpp:90
+90	extern "C" int main() {
+(gdb) c
+Continuing.
+Signal: SIGTRAP (Trace/breakpoint trap)
+[rp2040.core1] halted due to debug-request, current mode: Thread
+xPSR: 0x61000000 pc: 0x1000612a msp: 0x20004908
+
+Thread 1 "rp2040.core0" received signal SIGTRAP, Trace/breakpoint trap.
+_exit (status=status@entry=1) at newlib_interface.c:45
+45	        __breakpoint();
+(gdb) frame 4
+#4  async_context_threadsafe_background_execute_sync (self_base=0x20001590 <async_ctx>, func=0x1000325d <do_some_work(void*)>, param=0x20001a00 <loop::ref_counter>) at async_context_threadsafe_background.c:144
+144	        hard_assert(!recursive_mutex_enter_count((recursive_mutex_t *)&mutex_state));
+(gdb) info locals
+mutex_state = {
+  core = {
+    spin_lock = 0xd0000144
+  },
+  owner = 1 '\001',
+  enter_count = 1 '\001'
+}
+call = {
+  worker = {
+    next = 0x1000610f <sleep_until+62>,
+    do_work = 0x10005b7d <sleep_until_callback>,
+    work_pending = false,
+    user_data = 0x0
+  },
+  sem = {
+    core = {
+      spin_lock = 0x18000000
+    },
+    permits = 8152,
+    max_permits = 8196
+  },
+  func = 0x309,
+  param = 0x0,
+  rc = 402653184
+}
+self = <optimized out>
+rc = <optimized out>
+(gdb) disassemble
+Dump of assembler code for function async_context_threadsafe_background_execute_sync:
+   0x1000a654 <+0>:	movs	r3, #208	@ 0xd0
+   0x1000a656 <+2>:	push	{r4, r5, r6, r7, lr}
+   0x1000a658 <+4>:	lsls	r3, r3, #24
+   0x1000a65a <+6>:	movs	r7, r2
+   0x1000a65c <+8>:	ldr	r3, [r3, #0]
+   0x1000a65e <+10>:	ldrb	r2, [r0, #26]
+   0x1000a660 <+12>:	movs	r4, r0
+   0x1000a662 <+14>:	movs	r6, r1
+   0x1000a664 <+16>:	sub	sp, #52	@ 0x34
+   0x1000a666 <+18>:	adds	r0, #48	@ 0x30
+   0x1000a668 <+20>:	cmp	r2, r3
+   0x1000a66a <+22>:	beq.n	0x1000a6be <async_context_threadsafe_background_execute_sync+106>
+   0x1000a66c <+24>:	add	r3, sp, #4
+   0x1000a66e <+26>:	movs	r2, r3
+   0x1000a670 <+28>:	ldmia	r0!, {r1, r5}
+   0x1000a672 <+30>:	stmia	r2!, {r1, r5}
+   0x1000a674 <+32>:	ldrb	r3, [r3, #5]
+   0x1000a676 <+34>:	cmp	r3, #0
+   0x1000a678 <+36>:	beq.n	0x1000a67e <async_context_threadsafe_background_execute_sync+42>
+   0x1000a67a <+38>:	bl	0x10007b84 <hard_assertion_failure>
+=> 0x1000a67e <+42>:	add	r5, sp, #12
+   0x1000a680 <+44>:	movs	r2, #36	@ 0x24
+   0x1000a682 <+46>:	movs	r1, #0
+   0x1000a684 <+48>:	movs	r0, r5
+   0x1000a686 <+50>:	bl	0x10007a20 <__wrap_memset>
+   0x1000a68a <+54>:	ldr	r3, [pc, #68]	@ (0x1000a6d0 <async_context_threadsafe_background_execute_sync+124>)
+   0x1000a68c <+56>:	movs	r2, #1
+   0x1000a68e <+58>:	movs	r1, #0
+   0x1000a690 <+60>:	add	r0, sp, #28
+   0x1000a692 <+62>:	str	r3, [sp, #16]
+   0x1000a694 <+64>:	str	r6, [sp, #36]	@ 0x24
+   0x1000a696 <+66>:	str	r7, [sp, #40]	@ 0x28
+   0x1000a698 <+68>:	bl	0x100125d4 <sem_init>
+   0x1000a69c <+72>:	ldr	r3, [r4, #0]
+   0x1000a69e <+74>:	movs	r1, r5
+   0x1000a6a0 <+76>:	ldr	r3, [r3, #28]
+   0x1000a6a2 <+78>:	movs	r0, r4
+   0x1000a6a4 <+80>:	blx	r3
+   0x1000a6a6 <+82>:	ldr	r3, [r4, #0]
+   0x1000a6a8 <+84>:	movs	r1, r5
+   0x1000a6aa <+86>:	movs	r0, r4
+   0x1000a6ac <+88>:	ldr	r3, [r3, #36]	@ 0x24
+   0x1000a6ae <+90>:	blx	r3
+   0x1000a6b0 <+92>:	add	r0, sp, #28
+   0x1000a6b2 <+94>:	bl	0x10012668 <__sem_acquire_blocking_veneer>
+   0x1000a6b6 <+98>:	ldr	r5, [sp, #44]	@ 0x2c
+   0x1000a6b8 <+100>:	movs	r0, r5
+   0x1000a6ba <+102>:	add	sp, #52	@ 0x34
+   0x1000a6bc <+104>:	pop	{r4, r5, r6, r7, pc}
+   0x1000a6be <+106>:	bl	0x10012678 <__recursive_mutex_enter_blocking_veneer>
+   0x1000a6c2 <+110>:	movs	r0, r7
+   0x1000a6c4 <+112>:	blx	r6
+   0x1000a6c6 <+114>:	movs	r5, r0
+   0x1000a6c8 <+116>:	movs	r0, r4
+   0x1000a6ca <+118>:	bl	0x1000a45c <lock_release>
+   0x1000a6ce <+122>:	b.n	0x1000a6b8 <async_context_threadsafe_background_execute_sync+100>
+   0x1000a6d0 <+124>:	add	r6, pc, #196	@ (adr r6, 0x1000a798 <async_context_base_add_at_time_worker+12>)
+   0x1000a6d2 <+126>:	asrs	r0, r0, #32
+End of assembler dump.

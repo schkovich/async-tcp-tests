@@ -1,0 +1,31 @@
+@startuml Write Events Flow
+
+participant "App Code\n(Core 0)" as App
+participant "TcpClient" as Client
+participant "TcpWriteHandler\n(EventBridge)" as Handler
+participant "async_context\n(Core 0)" as Context
+participant "TcpClientContext" as TcpCtx
+participant "lwIP TCP" as TCP
+participant "Network" as Net
+
+== Write Request ==
+App -> Client: write_async(data, size)
+Client -> Handler: enqueue_write(data, size)
+Handler -> Context: run() [schedule onWork()]
+Context -> Handler: onWork()
+Handler -> TcpCtx: write(data, size)
+TcpCtx -> TCP: tcp_write()
+TCP -> Net: send packet
+
+== ACK Reception ==
+Net -> TCP: ACK received
+TCP -> TcpCtx: _acked(len)
+TcpCtx -> Handler: on_ack_received(len)
+Handler -> Context: run() [schedule onWork()]
+Context -> Handler: onWork()
+
+alt More data to send
+    Handler -> TcpCtx: write(remaining_data)
+    TcpCtx -> TCP: tcp_write()
+    TCP -> Net: send next chunk
+@enduml

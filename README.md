@@ -1,59 +1,50 @@
-# Development Setup Guide
+# async-tcp-tests
 
-This project uses arduino-pico core for debugging RP2040-based Arduino Pico programs with local modifications.
+This repository was initially set as a testbed for debugging and validating fixes for two bugs in the Raspberry Pi Pico SDK. Over time, it evolved into a dedicated environment for developing and testing the async-tcp library.
 
-## Prerequisites
+## Current Purpose
 
-- [Arduino Pico](https://github.com/earlephilhower/arduino-pico) core
-- [PlatformIO](https://platformio.org/)
-- CMSIS-DAP compatible debug probe
+The repository is now focused on testing and demonstrating the async-tcp library, which provides an event-driven, thread-safe TCP client abstraction for the RP2040 platform using async_context and lwIP.
 
-## Setup Process
+## Quick Start
 
-1. Clone those repositories:
-```bash
-git clone https://github.com/schkovich/arduino-pico.git 
-cd arduino-pico
-git checkout execute_sync_2433
-git submodule update --init
-cd ..
-git clone git@github.com:schkovich/pico-sdk-tests.git
-cd pico-sdk-tests
-```
+To evaluate or build this project:
+
+1. **Clone this repository:**
+
+   ```sh
+   git clone https://github.com/schkovich/async-tcp-tests.git
+   cd async-tcp-tests
+   ```
+
+2. **Initialise and update submodules:**
+
+   ```sh
+   git submodule update --init --recursive
+   ```
+
+3. **Build and monitor with PlatformIO:**
+
+   ```sh
+   pio run
+   pio device monitor
+   ```
+
+   For instructions on using async-tcp in a new project, see the [async-tcp README](lib/async-tcp/README.md).
 
 ## Project Structure
+
 ```plaintext
-
-├── arduino-pico # Forked arduino-pico core
-├── pico-sdk-tests
-│   ├── lib
-│   ├── .pio # PlatformIO build directory
-│   ├── scripts # Debug scripts
-│   └── src
+├── lib
+│   └── async-tcp    # async-tcp library as a submodule
+├── scripts          # Debug scripts
+├── src              # Application source code
+└── docs             # Documentation
 ```
 
-## Project configuration
-The arduino-pico core is configured in [platformio.ini](https://docs.platformio.org/en/latest/projectconf/index.html#platformio-ini-project-configuration-file) via [platform_package](https://docs.platformio.org/en/latest/projectconf/sections/env/options/platform/platform_packages.html#platform-packages) option, pointing to the [local folder](https://docs.platformio.org/en/latest/core/userguide/pkg/cmd_install.html#local-folder) and “Symbolic Link” feature:
-```ini
-[env:debug]
-board = nanorp2040connect
-framework = arduino
-platform = https://github.com/maxgerhardt/platform-raspberrypi.git
-board_build.core = earlephilhower
-platform_packages =
-    framework-arduinopico@symlink://../arduino-pico
-```
-## Building Core Components
-The pico-sdk build process:
+## Notes
+- The repo was formerly named `pico-sdk-tests`.
+- The original pico-sdk bugfixes are now upstream and no longer require local patching.
+- The async-tcp library is under active development and testing here.
 
-1. Compiles core SDK libraries
-2. Generates boot stage 2 code for different flash chips
-3. Produces required build artifacts for both RP2040 and RP2350
-
-For detailed build steps, see [make-libpico.sh](https://github.com/schkovich/arduino-pico/blob/execute-sync%407c51742/tools/libpico/make-libpico.sh) in the arduino-pico core.
-
-### Development Workflow
-
-- Pico SDK and async_context are pre-built statically linked to the project
-- The project is built using [PlatformIO](https://docs.platformio.org/en/latest/core/index.html)
-- Debug using CMSIS-DAP probe
+For more details, see The [Application Workflow](docs/workflow.md).
