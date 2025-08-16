@@ -24,6 +24,9 @@ namespace e5 {
     /**
      * @brief Handles the connection closure event.
      *
+     * @deprecated Use `TcpClientSyncAccessor::status()` to check if the
+     * connection is closed instead of relying on this handler.
+     *
      * This method is called when the TCP connection is closed by the server.
      * It:
      * 1. Retrieves the complete quote from the buffer

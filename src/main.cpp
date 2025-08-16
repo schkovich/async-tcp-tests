@@ -11,6 +11,7 @@
  * - Asynchronous networking on a dual-core Raspberry Pi Pico
  */
 
+#include <lwip/tcpbase.h>
 #ifndef ESPHOSTSPI
 #error This example requires an ESP-Hosted-FG WiFi chip to be defined, see the documentation
 // For example, add this to your boards.local.txt:
@@ -79,12 +80,12 @@ e5::SerialPrinter serial_printer(ctx1);
 // Timing variables
 static e5::LoopScheduler scheduler0; // For Core 0
 static e5::LoopScheduler scheduler1; // For Core 1
-static const std::string qotd = "qotd";
-static const std::string echo = "echo";
-static const std::string stack_0 = "stack_0";
-static const std::string stack_1 = "stack_1";
-static const std::string heap = "heap";
-static const std::string board_temperature = "temperature";
+static constexpr int8_t qotd = 0;
+static constexpr int8_t echo = 1;
+static constexpr int8_t stack_0 = 2;
+static constexpr int8_t stack_1 = 3;
+static constexpr int8_t heap = 4;
+static constexpr int8_t board_temperature = 5;
 /**
  * Reads the board temperature from internal temperature sensor
  * @return Temperature value in Celsius
@@ -112,21 +113,14 @@ std::string formatTemperatureMessage(const float temperature) {
  */
 void get_quote_of_the_day() {
     // Check if we're already connected first
-    if (qotd_in_progress) {
-        DEBUGCORE("[DEBUG] QOTD client already connected, skipping.\n");
-        auto notify = std::make_unique<std::string>(
-            "[DEBUG] QOTD client already connected, skipping.\n");
-        serial_printer.print(std::move(notify));
+    if (qotd_client.status() == CLOSED) {
+        if (!qotd_client.connect(qotd_ip_address, qotd_port)) {
+            DEBUGCORE("[ERROR] Failed to connect to QOTD server.\n");
+        }
         return;
     }
-    qotd_in_progress = true;
-    if (!qotd_client.connect(qotd_ip_address, qotd_port)) {
-        qotd_in_progress = false;
-        DEBUGCORE("[ERROR] Failed to connect to QOTD server.\n");
-        auto notify = std::make_unique<std::string>(
-            "[ERROR] Failed to connect to QOTD server.\n");
-        serial_printer.print(std::move(notify));
-    }
+
+    DEBUGCORE("[DEBUG] QOTD client already connected, skipping.\n");
 }
 
 /**
@@ -138,15 +132,11 @@ void get_quote_of_the_day() {
 void get_echo() {
     const std::string buffer_content = qotd_buffer.get();
     if (!buffer_content.empty()) {
-        if (!echo_connected) {
+        if (echo_client.status() == CLOSED) {
             if (0 == echo_client.connect(echo_ip_address, echo_port)) {
                 DEBUGCORE("[ERROR] Failed to connect to echo server..\n");
-                auto notify = std::make_unique<std::string>(
-                    "[ERROR] Failed to connect to echo server..\n");
-                serial_printer.print(std::move(notify));
                 return;
             }
-            echo_connected = true;
         }
 
         if (const size_t error = echo_client.write(
@@ -154,10 +144,6 @@ void get_echo() {
                 buffer_content.size());
             error != PICO_OK) {
             DEBUGCORE("[DEBUG] echo_client.write returned error %d\n", error);
-            auto notify = std::make_unique<std::string>(
-                    "[DEBUG][write] RESOURCE_IN_USE (" +
-                    std::to_string(error) + ")\n");
-            serial_printer.print(std::move(notify));
         }
     }
 }
@@ -241,6 +227,12 @@ void setup() {
         panic_compact("CTX init failed on Core 0\n");
     }
 
+    // Create TcpClientSyncAccessor for each client and assign
+    auto qotd_sync = std::make_unique<TcpClientSyncAccessor>(ctx0, qotd_client);
+    qotd_client.setSyncAccessor(std::move(qotd_sync));
+    auto echo_sync = std::make_unique<TcpClientSyncAccessor>(ctx0, echo_client);
+    echo_client.setSyncAccessor(std::move(echo_sync));
+
     // Create TcpWriter locally and transfer ownership to the echo client
     auto echo_writer = std::make_unique<TcpWriter>(ctx0, echo_client);
     echo_client.setWriter(std::move(echo_writer));
@@ -265,16 +257,15 @@ void setup() {
     qotd_received_handler->initialisePerpetualBridge();
     qotd_client.setOnReceivedCallback(std::move(qotd_received_handler));
 
-    auto qotd_closed_handler = std::make_unique<e5::QotdClosedHandler>(
-        ctx0, qotd_buffer, qotd_in_progress);
-    qotd_closed_handler->initialisePerpetualBridge();
-    qotd_client.setOnClosedCallback(std::move(qotd_closed_handler));
-
-    scheduler0.setEntry(qotd, 432);
-    scheduler0.setEntry(echo, 257);
-    scheduler0.setEntry(stack_0, 3030);
+    scheduler0.setEntry(qotd, 888);
+    scheduler0.setEntry(echo, 333);
+    scheduler0.setEntry(stack_0, 40404);
 
     pinMode(LED_BUILTIN, OUTPUT);
+
+    // Set unique client IDs
+    qotd_client.setClientId(1);
+    echo_client.setClientId(2);
 
     operational = true;
 }
@@ -292,9 +283,9 @@ void setup1() {
         panic_compact("CTX init failed on Core 1\n");
     }
 
-    scheduler1.setEntry(stack_1, 80808);
-    scheduler1.setEntry(heap, 70707);
-    scheduler1.setEntry(board_temperature, 50505);
+    scheduler1.setEntry(stack_1, 808080);
+    scheduler1.setEntry(heap, 707070);
+    scheduler1.setEntry(board_temperature, 505050);
     ctx1_ready = true;
 }
 
@@ -316,7 +307,6 @@ void loop() {
 
 /**
  * @brief Loop function for Core 1.
- * Currently empties as all work is handled through the async context.
  */
 void loop1() {
     if (scheduler1.timeToRun(stack_1)) print_stack_stats();

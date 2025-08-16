@@ -20,8 +20,6 @@
 #include "ContextManager.hpp"
 #include "EventBridge.hpp"
 #include "QuoteBuffer.hpp"
-#include "SerialPrinter.hpp"
-#include "TcpClient.hpp"
 
 namespace e5 {
     using namespace async_tcp;
@@ -72,7 +70,7 @@ namespace e5 {
              * execute this handler
              * @param quote_buffer Reference to the thread-safe buffer where the
              * quote is stored
-             * @param serial_printer Reference to the serial printer for output
+             * @param qotd_in_progress
              * notifications
              */
             explicit QotdClosedHandler(const AsyncCtx &ctx,
