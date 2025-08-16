@@ -84,6 +84,8 @@ namespace e5 {
                 PrintHandler *raw_ptr = handler.get();
                 raw_ptr->initialiseEphemeralBridge();
                 raw_ptr->takeOwnership(std::move(handler));
+                handler.reset(); // Ensure no double delete: release unique_ptr
+                                 // after ownership transfer
                 raw_ptr->run(0);
             }
     };
