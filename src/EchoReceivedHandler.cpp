@@ -33,7 +33,13 @@ namespace e5 {
         if (available == 0) return;
         const char *data = m_io.peekBuffer();
         // Print any incoming echo data
-        auto quote = std::make_unique<std::string>(data);
+        auto quote = std::make_unique<std::string>();
+        quote->reserve(available + 1);
+        quote->assign(data, available);
+        // Trim trailing nulls and whitespace
+        while (!quote->empty() && (quote->back() == '\0' || isspace(static_cast<unsigned char>(quote->back())))) {
+            quote->pop_back();
+        }
         quote->push_back('\n');
         m_serial_printer.print(std::move(quote));
         m_io.peekConsume(available);
