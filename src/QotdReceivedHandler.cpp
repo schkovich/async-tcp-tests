@@ -44,10 +44,14 @@ namespace e5 {
                 // Create a string from the peeked data
                 // This makes a copy of the data, so the original is safe to
                 // consume.
-                const std::string data(peek_buffer, available);
-
-                m_quote_buffer.set(data);
-
+                const auto quote = std::make_unique<std::string>();
+                quote->reserve(available + 1);
+                quote->assign(peek_buffer, available);
+                // Trim trailing nulls only (preserve all whitespace, including CR/LF)
+                while (!quote->empty() && quote->back() == '\0') {
+                    quote->pop_back();
+                }
+                m_quote_buffer.set(*quote);
                 // Mark the data as consumed in the TCP buffer
                 m_io.peekConsume(available);
             }
