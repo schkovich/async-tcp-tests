@@ -14,7 +14,7 @@
 #pragma once
 
 #include "ContextManager.hpp"
-#include "EventBridge.hpp"
+#include "PerpetualBridge.hpp"
 #include "TcpClient.hpp"
 #include <lwip/err.h>
 #include <memory>
@@ -32,12 +32,11 @@ namespace e5 {
      * performs appropriate cleanup. It follows the EventBridge pattern
      * for proper core affinity and thread safety.
      */
-    class TcpErrorHandler final : public EventBridge {
-        private:
-            TcpClient& m_io;                              ///< TCP client reference
-            std::unique_ptr<std::string> m_data;          ///< Data that failed to write
-            size_t m_written;                             ///< Bytes written before error
-            err_t m_error;                                ///< Error code
+    class TcpErrorHandler final : public PerpetualBridge {
+            TcpClient &m_io;                     ///< TCP client reference
+            std::unique_ptr<std::string> m_data; ///< Data that failed to write
+            size_t m_written;                    ///< Bytes written before error
+            err_t m_error;                       ///< Error code
 
         protected:
             /**
@@ -58,11 +57,11 @@ namespace e5 {
              * @param written Bytes written before error
              * @param error Error code from TCP layer
              */
-            TcpErrorHandler(const AsyncCtx & ctx,
-                           TcpClient& io,
-                           std::unique_ptr<std::string> data,
-                           size_t written,
-                           err_t error);
+            TcpErrorHandler(const AsyncCtx &ctx, TcpClient &io,
+                            std::unique_ptr<std::string> data,
+                            const size_t written, const err_t error)
+                : PerpetualBridge(ctx), m_io(io), m_data(std::move(data)),
+                  m_written(written), m_error(error) {}
     };
 
 } // namespace e5

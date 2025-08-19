@@ -27,7 +27,7 @@ namespace e5 {
      *
      * This method is called when the print_handler is executed. It prints the
      * stored message to the serial output. The message and handler cleanup is
-     * handled automatically by the EventBridge's self-ownership mechanism.
+     * handled automatically by the EphemeralBridge's self-ownership mechanism.
      */
     void  PrintHandler::onWork() {
         if (!m_message->empty()) {
@@ -45,5 +45,5 @@ namespace e5 {
      */
     PrintHandler::PrintHandler(const AsyncCtx &ctx,
                                std::unique_ptr<std::string> message)
-        : EventBridge(ctx), m_message(std::move(message)) {}
+        : EphemeralBridge(ctx), m_message(std::move(message)) {}
 } // namespace e5

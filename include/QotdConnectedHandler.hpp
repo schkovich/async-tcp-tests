@@ -18,7 +18,7 @@
 
 #pragma once
 #include "ContextManager.hpp"
-#include "EventBridge.hpp"
+#include "PerpetualBridge.hpp"
 #include "QuoteBuffer.hpp"
 #include "SerialPrinter.hpp"
 #include "TcpClient.hpp"
@@ -39,7 +39,7 @@ namespace e5 {
      * performance by enabling keep-alive and disabling Nagle's algorithm for
      * lower latency.
      */
-    class QotdConnectedHandler final : public EventBridge {
+    class QotdConnectedHandler final : public PerpetualBridge {
             TcpClient &m_io; /**< Reference to the TCP client handling the
                                      connection. */
             SerialPrinter &m_serial_printer; /**< Reference to the serial
@@ -78,7 +78,7 @@ namespace e5 {
                                           TcpClient &io,
                                           SerialPrinter &serial_printer,
                                           QuoteBuffer &quote_buffer)
-                : EventBridge(ctx), m_io(io), m_serial_printer(serial_printer),
+                : PerpetualBridge(ctx), m_io(io), m_serial_printer(serial_printer),
                   m_quote_buffer(quote_buffer) {}
     };
 

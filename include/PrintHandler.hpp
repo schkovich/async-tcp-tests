@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include "EventBridge.hpp"
+#include "EphemeralBridge.hpp"
 #include <string>
 
 namespace e5 {
@@ -36,7 +36,7 @@ namespace e5 {
      * task registry, demonstrating a self-cleaning pattern for one-shot
      * operations.
      */
-    class PrintHandler final : public EventBridge {
+    class PrintHandler final : public EphemeralBridge {
 
             std::unique_ptr<std::string> m_message =
                 nullptr; /**< Message buffer containing the text to print */
@@ -82,10 +82,11 @@ namespace e5 {
                 auto handler =
                     std::make_unique<PrintHandler>(ctx, std::move(message));
                 PrintHandler *raw_ptr = handler.get();
-                raw_ptr->initialiseEphemeralBridge();
                 raw_ptr->takeOwnership(std::move(handler));
                 handler.reset(); // Ensure no double delete: release unique_ptr
-                                 // after ownership transfer
+                raw_ptr->initialiseBridge();
+                // after ownership transfer
+                // ReSharper disable once CppDFAInvalidatedMemory
                 raw_ptr->run(0);
             }
     };

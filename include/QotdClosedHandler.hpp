@@ -18,7 +18,7 @@
 
 #pragma once
 #include "ContextManager.hpp"
-#include "EventBridge.hpp"
+#include "PerpetualBridge.hpp"
 #include "QuoteBuffer.hpp"
 
 namespace e5 {
@@ -37,7 +37,7 @@ namespace e5 {
      * The handler finalises the quote buffer and notifies the user that a
      * complete quote has been received.
      */
-    class QotdClosedHandler final : public EventBridge {
+    class QotdClosedHandler final : public PerpetualBridge {
             QuoteBuffer
                 &m_quote_buffer; /**< Buffer storing the received quote data. */
 
@@ -76,7 +76,7 @@ namespace e5 {
             explicit QotdClosedHandler(const AsyncCtx &ctx,
                                        QuoteBuffer &quote_buffer,
                                        volatile bool &qotd_in_progress)
-                : EventBridge(ctx), m_quote_buffer(quote_buffer),
+                : PerpetualBridge(ctx), m_quote_buffer(quote_buffer),
                   m_qotd_in_progress(qotd_in_progress) {}
     };
 

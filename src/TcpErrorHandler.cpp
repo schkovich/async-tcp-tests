@@ -11,15 +11,6 @@
 
 namespace e5 {
 
-    TcpErrorHandler::TcpErrorHandler(const AsyncCtx & ctx,
-                                    TcpClient& io,
-                                    std::unique_ptr<std::string> data,
-                                    size_t written,
-                                    err_t error)
-        : EventBridge(ctx), m_io(io), m_data(std::move(data)),
-          m_written(written), m_error(error) {
-    }
-
     void TcpErrorHandler::onWork() {
         // Log the error for debugging
         DEBUGWIRE("TcpErrorHandler: Write failed with error %d, %d bytes written\n",

@@ -22,7 +22,6 @@
 #include "ContextManager.hpp"
 #include "EchoConnectedHandler.hpp"
 #include "EchoReceivedHandler.hpp"
-#include "QotdClosedHandler.hpp"
 #include "QotdConnectedHandler.hpp"
 #include "QotdReceivedHandler.hpp"
 #include "QuoteBuffer.hpp"
@@ -239,22 +238,22 @@ void setup() {
 
     auto echo_connected_handler = std::make_unique<e5::EchoConnectedHandler>(
         ctx0, echo_client, serial_printer);
-    echo_connected_handler->initialisePerpetualBridge();
+    echo_connected_handler->initialiseBridge();
     echo_client.setOnConnectedCallback(std::move(echo_connected_handler));
 
     auto echo_received_handler = std::make_unique<e5::EchoReceivedHandler>(
         ctx0, echo_client, serial_printer, qotd_buffer);
-    echo_received_handler->initialisePerpetualBridge();
+    echo_received_handler->initialiseBridge();;
     echo_client.setOnReceivedCallback(std::move(echo_received_handler));
 
     auto qotd_connected_handler = std::make_unique<e5::QotdConnectedHandler>(
         ctx0, qotd_client, serial_printer, qotd_buffer);
-        qotd_connected_handler->initialisePerpetualBridge();
+        qotd_connected_handler->initialiseBridge();
     qotd_client.setOnConnectedCallback(std::move(qotd_connected_handler));
 
     auto qotd_received_handler = std::make_unique<e5::QotdReceivedHandler>(
         ctx0, qotd_buffer, qotd_client);
-    qotd_received_handler->initialisePerpetualBridge();
+    qotd_received_handler->initialiseBridge();
     qotd_client.setOnReceivedCallback(std::move(qotd_received_handler));
 
     scheduler0.setEntry(qotd, 888);

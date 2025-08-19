@@ -13,14 +13,13 @@
  */
 
 #pragma once
-#include "EventBridge.hpp"
+#include "PerpetualBridge.hpp"
 #include "SerialPrinter.hpp"
 #include "TcpClient.hpp"
 #include "QuoteBuffer.hpp"
 
 namespace e5 {
     using namespace async_tcp;
-    using Worker = EventBridge;
 
     /**
      * @class EchoReceivedHandler
@@ -33,7 +32,7 @@ namespace e5 {
      * The handler processes naturally chunked data (since Nagle's algorithm is
      * disabled) and then outputs it through the SerialPrinter.
      */
-    class EchoReceivedHandler final : public EventBridge {
+    class EchoReceivedHandler final : public PerpetualBridge {
             TcpClient &m_io; /**< Reference to the TCP client handling the
                                      connection. */
             SerialPrinter &m_serial_printer; /**< Reference to the serial
@@ -46,8 +45,7 @@ namespace e5 {
              * @brief Handles the data received event.
              *
              * This method is called when data is received on the TCP
-             * connection. It processes the available data as it naturally
-             * arrives in chunks (with Nagle's algorithm disabled) and outputs
+             * connection. It processes the available data and outputs
              * it through the SerialPrinter.
              *
              * The method is executed on the core where the ContextManager was
@@ -72,7 +70,7 @@ namespace e5 {
                                          TcpClient &io,
                                          SerialPrinter &serial_printer,
                                          QuoteBuffer &qotd_buffer)
-                : EventBridge(ctx),
+                : PerpetualBridge(ctx),
                   m_io(io),
                   m_serial_printer(serial_printer),
                   m_qotd_buffer(qotd_buffer) {

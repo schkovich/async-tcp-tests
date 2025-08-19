@@ -17,7 +17,7 @@
 
 #pragma once
 #include "ContextManager.hpp"
-#include "EventBridge.hpp"
+#include "PerpetualBridge.hpp"
 #include "QuoteBuffer.hpp"
 #include "TcpClient.hpp"
 
@@ -37,7 +37,7 @@ namespace e5 {
      * QuoteBuffer, and simulates data processing through the
      * simulateProcessData method.
      */
-    class QotdReceivedHandler final : public EventBridge {
+    class QotdReceivedHandler final : public PerpetualBridge {
             QuoteBuffer
                 &m_quote_buffer;  /**< Reference to the thread-safe buffer where
                                      the quote will be stored. */
@@ -76,7 +76,7 @@ namespace e5 {
             explicit QotdReceivedHandler(const AsyncCtx &ctx,
                                          QuoteBuffer &quote_buffer,
                                          TcpClient &io)
-                : EventBridge(ctx), m_quote_buffer(quote_buffer), m_io(io) {}
+                : PerpetualBridge(ctx), m_quote_buffer(quote_buffer), m_io(io) {}
     };
 
 } // namespace e5

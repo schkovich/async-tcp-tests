@@ -17,7 +17,7 @@
 
 #pragma once
 #include "ContextManager.hpp"
-#include "EventBridge.hpp"
+#include "PerpetualBridge.hpp"
 #include "SerialPrinter.hpp"
 #include "TcpClient.hpp"
 
@@ -36,7 +36,7 @@ namespace e5 {
      * The handler can access the TCP client to send data or perform other
      * operations, and can use the SerialPrinter to output status messages.
      */
-    class EchoConnectedHandler final : public EventBridge {
+    class EchoConnectedHandler final : public PerpetualBridge {
             TcpClient &m_io; /**< Reference to the TCP client handling the
                                      connection. */
             SerialPrinter &m_serial_printer; /**< Reference to the serial
@@ -71,7 +71,7 @@ namespace e5 {
             explicit EchoConnectedHandler(const AsyncCtx &ctx,
                                           TcpClient &io,
                                           SerialPrinter &serial_printer)
-                : EventBridge(ctx), m_io(io), m_serial_printer(serial_printer) {
+                : PerpetualBridge(ctx), m_io(io), m_serial_printer(serial_printer) {
             }
     };
 
