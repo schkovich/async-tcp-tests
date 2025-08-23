@@ -8,8 +8,8 @@
 
 #pragma once
 #include "ContextManager.hpp"
+#include <memory>
 #include <string>
-#include <atomic>
 
 namespace e5 {
 

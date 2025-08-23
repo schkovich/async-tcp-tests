@@ -16,14 +16,13 @@
  */
 
 #pragma once
+
 #include "ContextManager.hpp"
 #include "PerpetualBridge.hpp"
 #include "SerialPrinter.hpp"
 #include "TcpClient.hpp"
-
 namespace e5 {
     using namespace async_tcp;
-
     /**
      * @class EchoConnectedHandler
      * @brief Handles the connection established event for an echo client.
