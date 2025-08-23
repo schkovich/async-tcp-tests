@@ -37,9 +37,9 @@ namespace e5 {
     void QotdReceivedHandler::onWork() {
         // Check for available data using peekAvailable
 
-        if (const size_t available = m_io.peekAvailable(); available > 0) {
+        if (const size_t available = m_rx_buffer->peekAvailable(); available > 0) {
 
-            if (const char *peek_buffer = m_io.peekBuffer();
+            if (const char *peek_buffer = m_rx_buffer->peekBuffer();
                 peek_buffer != nullptr) {
                 // Create a string from the peeked data
                 // This makes a copy of the data, so the original is safe to
@@ -53,7 +53,7 @@ namespace e5 {
                 }
                 m_quote_buffer.set(*quote);
                 // Mark the data as consumed in the TCP buffer
-                m_io.peekConsume(available);
+                m_rx_buffer->peekConsume(available);
             }
         }
     }

@@ -1,0 +1,122 @@
+@startuml IoRxBufferAsyncFlow
+!theme plain
+title IoRxBuffer Async Execution Flow\nTCP Receive Data Processing via PerpetualBridge
+
+participant "lwIP Stack" as lwip
+participant "lwip_receive_callback" as callback
+participant "IoRxBuffer" as buffer
+participant "TcpClient" as client
+participant "PerpetualBridge" as bridge
+participant "AsyncContext" as async
+participant "Handler\n(Echo/Qotd)" as handler
+
+== lwIP Interrupt/Callback Context ==
+note over lwip, callback #FFEEEE
+    **Interrupt Context**
+    Non-preemptive execution
+    lwIP has control of CPU
+end note
+
+lwip -> callback : **TCP data received**\nlwip_receive_callback(arg, tpcb, p, err)
+activate callback
+
+callback -> client : getRxBuffer()
+client --> callback : IoRxBuffer*
+
+note right of callback
+    Critical: Check _head == p
+    for retry handling
+end note
+
+alt _head == p (retry case)
+    callback -> buffer : _onReceivedCallback()
+    callback --> lwip : ERR_OK
+else normal case
+    alt _head != nullptr
+        callback -> callback : pbuf_cat(_head, p)
+        note right : Append to existing chain
+    else _head == nullptr
+        callback -> callback : _head = p
+        note right : Take ownership of pbuf
+    end
+
+    callback -> buffer : _onReceivedCallback()
+    callback --> lwip : ERR_OK
+end
+
+deactivate callback
+
+== Synchronous Scheduling Phase ==
+note over buffer, bridge #EEFFEE
+    **Synchronous Scheduling**
+    Still in lwIP callback context
+    No preemption possible
+end note
+
+activate buffer
+buffer -> buffer : if (_receivedCb) _receivedCb()
+
+buffer -> client : _onReceiveCallback()
+activate client
+
+client -> bridge : workload(_rx)
+note right of bridge : Set IoRxBuffer* for handler
+
+client -> bridge : run()
+activate bridge
+
+bridge -> async : setWorkPending(m_perpetual_worker)
+note right of async : Schedule async execution
+
+bridge --> client : return
+deactivate bridge
+client --> buffer : return
+deactivate client
+buffer --> lwip : callback complete
+deactivate buffer
+
+== Async Context Takes Control ==
+note over async, handler #EEEEFF
+    **Async Context**
+    CPU control transferred
+    Handler executes non-preemptively
+end note
+
+async -> handler : onWork()
+activate handler
+
+handler -> buffer : peekAvailable()
+buffer --> handler : size_t available
+
+alt available > 0
+    handler -> buffer : peekBuffer()
+    buffer --> handler : const char* data
+
+    handler -> handler : **Process data**\n(Echo to serial / Store quote)
+
+    handler -> buffer : peekConsume(available)
+    activate buffer
+
+    buffer -> buffer : **Advance cursor**\n**Free consumed pbufs**
+
+    buffer -> buffer : tcp_recved(_pcb, available)
+    note right : Update TCP window
+
+    deactivate buffer
+end
+
+handler --> async : work complete
+deactivate handler
+
+== Control Returns ==
+note over lwip, async #FFFFEE
+    **CPU Available**
+    lwIP, main thread, or timers
+    can now take control
+end note
+
+async --> lwip : **CPU available for lwIP**
+async --> "Main Thread" as main : **CPU available for main**
+async --> "Timer ISR" as timer : **CPU available for timers**
+
+@enduml

@@ -242,7 +242,7 @@ void setup() {
     echo_client.setOnConnectedCallback(std::move(echo_connected_handler));
 
     auto echo_received_handler = std::make_unique<e5::EchoReceivedHandler>(
-        ctx0, echo_client, serial_printer, qotd_buffer);
+        ctx0, serial_printer, qotd_buffer);
     echo_received_handler->initialiseBridge();;
     echo_client.setOnReceivedCallback(std::move(echo_received_handler));
 
@@ -252,7 +252,7 @@ void setup() {
     qotd_client.setOnConnectedCallback(std::move(qotd_connected_handler));
 
     auto qotd_received_handler = std::make_unique<e5::QotdReceivedHandler>(
-        ctx0, qotd_buffer, qotd_client);
+        ctx0, qotd_buffer);
     qotd_received_handler->initialiseBridge();
     qotd_client.setOnReceivedCallback(std::move(qotd_received_handler));
 
