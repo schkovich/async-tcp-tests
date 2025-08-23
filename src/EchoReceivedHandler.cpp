@@ -29,16 +29,17 @@ namespace e5 {
      * segments based on network conditions.
      */
     void EchoReceivedHandler::onWork() {
-        const size_t available = m_io.peekAvailable();
+        const size_t available = m_rx_buffer->peekAvailable();
         if (available == 0) return;
-        const char *data = m_io.peekBuffer();
+
+        const char *data = m_rx_buffer->peekBuffer();
         // Print any incoming echo data
         auto quote = std::make_unique<std::string>();
         quote->reserve(available + 1);
         quote->assign(data, available);
         quote->append("\n");
         m_serial_printer.print(std::move(quote));
-        m_io.peekConsume(available);
+        m_rx_buffer->peekConsume(available);
     }
 
 } // namespace e5

@@ -41,8 +41,9 @@ namespace e5 {
             QuoteBuffer
                 &m_quote_buffer;  /**< Reference to the thread-safe buffer where
                                      the quote will be stored. */
-            TcpClient &m_io; /**< Reference to the TCP client handling the
-                                     connection. */
+            IoRxBuffer *m_rx_buffer = nullptr; /**< Pointer to the IO receive buffer
+                                                     associated with the TCP
+                                                     client. */
 
         protected:
             /**
@@ -73,10 +74,13 @@ namespace e5 {
              * quote will be stored
              * @param io Reference to the TCP client that received the data
              */
-            explicit QotdReceivedHandler(const AsyncCtx &ctx,
-                                         QuoteBuffer &quote_buffer,
-                                         TcpClient &io)
-                : PerpetualBridge(ctx), m_quote_buffer(quote_buffer), m_io(io) {}
+            QotdReceivedHandler(const AsyncCtx &ctx, QuoteBuffer &quote_buffer)
+                : PerpetualBridge(ctx), m_quote_buffer(quote_buffer) {}
+
+            // Override the virtual workload for RxBuffer
+            void workload(void *data) override {
+                m_rx_buffer = static_cast<IoRxBuffer*>(data);
+            }
     };
 
 } // namespace e5

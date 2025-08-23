@@ -13,9 +13,9 @@
  */
 
 #pragma once
+#include "IoRxBuffer.hpp"
 #include "PerpetualBridge.hpp"
 #include "SerialPrinter.hpp"
-#include "TcpClient.hpp"
 #include "QuoteBuffer.hpp"
 
 namespace e5 {
@@ -33,12 +33,12 @@ namespace e5 {
      * disabled) and then outputs it through the SerialPrinter.
      */
     class EchoReceivedHandler final : public PerpetualBridge {
-            TcpClient &m_io; /**< Reference to the TCP client handling the
-                                     connection. */
             SerialPrinter &m_serial_printer; /**< Reference to the serial
                                                 printer for output. */
             QuoteBuffer &m_qotd_buffer; /**< Reference to the quote buffer for
                                             storing received data. */
+            // Store the received RxBuffer for async processing
+            IoRxBuffer *m_rx_buffer = nullptr;
 
         protected:
             /**
@@ -60,20 +60,22 @@ namespace e5 {
              *
              * @param ctx Shared pointer to the context manager that will
              * execute this handler
-             * @param io Reference to the TCP client that received the data
              * @param serial_printer Reference to the serial printer for output
              * messages
              * @param qotd_buffer Reference to the quote buffer for storing
              * received data
              */
-            explicit EchoReceivedHandler(const AsyncCtx &ctx,
-                                         TcpClient &io,
+            EchoReceivedHandler(const AsyncCtx &ctx,
                                          SerialPrinter &serial_printer,
                                          QuoteBuffer &qotd_buffer)
                 : PerpetualBridge(ctx),
-                  m_io(io),
                   m_serial_printer(serial_printer),
                   m_qotd_buffer(qotd_buffer) {
+            }
+
+            // Override the virtual workload for RxBuffer
+            void workload(void *data) override {
+                m_rx_buffer = static_cast<IoRxBuffer*>(data);
             }
     };
 
