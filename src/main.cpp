@@ -30,6 +30,7 @@
 #include "SerialPrinter.hpp"
 #include "TcpClient.hpp"
 #include "TcpWriter.hpp"
+#include "TcpPollHandler.hpp"
 #include "secrets.h" // Contains STASSID, STAPSK, QOTD_HOST, ECHO_HOST, QOTD_PORT, ECHO_PORT
 #include <WiFi.h>
 #include <algorithm>
@@ -258,6 +259,11 @@ void setup() {
     echo_received_handler->initialiseBridge();
     ;
     echo_client.setOnReceivedCallback(std::move(echo_received_handler));
+
+    // Register lwIP poll handler for echo client
+    auto echo_poll_handler = std::make_unique<e5::TcpPollHandler>(ctx0, echo_client);
+    echo_poll_handler->initialiseBridge();
+    echo_client.setOnPollCallback(std::move(echo_poll_handler));
 
     auto qotd_connected_handler = std::make_unique<e5::QotdConnectedHandler>(
         ctx0, qotd_client, serial_printer, qotd_buffer);
