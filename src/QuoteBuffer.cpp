@@ -36,7 +36,7 @@ namespace e5 {
     uint32_t QuoteBuffer::onExecute(const SyncPayloadPtr payload) {
 
         switch (const auto *buffer_payload =
-                    static_cast<BufferPayload *>(payload.get());
+                    static_cast<BufferPayload *>(payload.get()); // NOLINT
                 buffer_payload->op) {
         case BufferPayload::SET:
             m_buffer = buffer_payload->data;
@@ -46,12 +46,29 @@ namespace e5 {
             m_buffer += buffer_payload->data;
             return PICO_OK;
 
-        default:
+        case BufferPayload::SET_COMPLETE:
+            m_quote_complete = true;
+            return PICO_OK;
+
+        case BufferPayload::RESET_COMPLETE:
+            m_quote_complete = false;
+            m_buffer.clear();
+            return PICO_OK;
+
+        case BufferPayload::IS_COMPLETE:
+            if (buffer_payload->result_ptr) {
+                *buffer_payload->result_ptr = m_quote_complete ? "1" : "0";
+            }
+            return PICO_OK;
+
+        case BufferPayload::GET:
             if (buffer_payload->result_ptr) {
                 *buffer_payload->result_ptr = m_buffer;
                 return PICO_OK;
             }
             return PICO_ERROR_NO_DATA;
+        default:
+            return PICO_ERROR_INVALID_ARG;
         }
     }
 
@@ -64,7 +81,7 @@ namespace e5 {
      *
      * @param data String to set as the buffer content
      */
-    void QuoteBuffer::set(const std::string data) { // NOLINT
+    void QuoteBuffer::set(const std::string &data) { // NOLINT
         auto payload = std::make_unique<BufferPayload>();
         payload->op = BufferPayload::SET;
         payload->data = data;
@@ -110,7 +127,7 @@ namespace e5 {
      *
      * @param data String to append to the buffer content
      */
-    void QuoteBuffer::append(const std::string data) { // NOLINT
+    void QuoteBuffer::append(const std::string &data) { // NOLINT
         auto payload = std::make_unique<BufferPayload>();
         payload->op = BufferPayload::APPEND;
         payload->data = data;
@@ -138,8 +155,9 @@ namespace e5 {
         payload->result_ptr = &result_string;
         if (const auto result = execute(std::move(payload));
             result != PICO_OK) {
-            DEBUGV("[c%d][%llu][ERROR] QuoteBuffer::empty() returned error %d.\n",
-                   rp2040.cpuid(), time_us_64(), result);
+            DEBUGV(
+                "[c%d][%llu][ERROR] QuoteBuffer::empty() returned error %d.\n",
+                rp2040.cpuid(), time_us_64(), result);
         }
         return result_string.empty();
     }
@@ -157,7 +175,63 @@ namespace e5 {
         payload->data = "";
         if (const auto result = execute(std::move(payload));
             result != PICO_OK) {
-            DEBUGV("[c%d][%llu][ERROR] QuoteBuffer::clear() returned error %d.\n",
+            DEBUGV(
+                "[c%d][%llu][ERROR] QuoteBuffer::clear() returned error %d.\n",
+                rp2040.cpuid(), time_us_64(), result);
+        }
+    }
+
+    /**
+     * @brief Marks the current quote as complete
+     *
+     * This method signals that the quote is fully received and ready for
+     * consumption by other components (e.g., echo server).
+     */
+    void QuoteBuffer::setComplete() {
+        auto payload = std::make_unique<BufferPayload>();
+        payload->op = BufferPayload::SET_COMPLETE;
+        if (const auto result = execute(std::move(payload));
+            result != PICO_OK) {
+            DEBUGV("[c%d][%llu][ERROR] QuoteBuffer::setComplete() returned "
+                   "error %d.\n",
+                   rp2040.cpuid(), time_us_64(), result);
+        }
+    }
+
+    /**
+     * @brief Checks if the current quote is complete
+     *
+     * @return true if quote is complete and ready for consumption, false
+     * otherwise
+     */
+    bool QuoteBuffer::isComplete() {
+        std::string result_string;
+        auto payload = std::make_unique<BufferPayload>();
+        payload->op = BufferPayload::IS_COMPLETE;
+        payload->result_ptr = &result_string;
+        if (const auto result = execute(std::move(payload));
+            result != PICO_OK) {
+            DEBUGV("[c%d][%llu][ERROR] QuoteBuffer::isComplete() returned "
+                   "error %d.\n",
+                   rp2040.cpuid(), time_us_64(), result);
+            return false;
+        }
+        return result_string == "1";
+    }
+
+    /**
+     * @brief Resets the completion flag to false
+     *
+     * This method explicitly resets the completion flag and clears the buffer.
+     * Called when connection to QOTD server is open.
+     */
+    void QuoteBuffer::resetBuffer() {
+        auto payload = std::make_unique<BufferPayload>();
+        payload->op = BufferPayload::RESET_COMPLETE;
+        if (const auto result = execute(std::move(payload));
+            result != PICO_OK) {
+            DEBUGV("[c%d][%llu][ERROR] QuoteBuffer::resetBuffer() returned "
+                   "error %d.\n",
                    rp2040.cpuid(), time_us_64(), result);
         }
     }

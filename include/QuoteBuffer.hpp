@@ -38,6 +38,7 @@ namespace e5 {
     class QuoteBuffer final : public SyncBridge {
 
             std::string m_buffer; ///< The internal string buffer
+            bool m_quote_complete = false; ///< Flag indicating if current quote is complete
 
             /**
              * @struct BufferPayload
@@ -52,6 +53,9 @@ namespace e5 {
                         SET,    ///< Set the buffer content
                         GET,    ///< Get the buffer content
                         APPEND, ///< Append to the buffer content
+                        SET_COMPLETE, ///< Mark quote as complete
+                        IS_COMPLETE,  ///< Check if quote is complete
+                        RESET_COMPLETE, ///< Reset quote completion flag
                     };
 
                     Operation op;            ///< The operation to perform
@@ -93,7 +97,7 @@ namespace e5 {
              *
              * @param data String to set as the buffer content
              */
-            void set(std::string data);
+            void set(const std::string &data);
 
             /**
              * @brief Gets the buffer content
@@ -115,7 +119,7 @@ namespace e5 {
              *
              * @param data String to append to the buffer content
              */
-            void append(std::string data);
+            void append(const std::string &data);
 
             /**
              * @brief Returns true if the buffer is empty, false otherwise.
@@ -126,6 +130,29 @@ namespace e5 {
              * @brief Clears the buffer content.
              */
             void clear();
+
+            /**
+             * @brief Marks the current quote as complete.
+             *
+             * This method signals that the quote is fully received and ready
+             * for consumption by other components (e.g., echo server).
+             */
+            void setComplete();
+
+            /**
+             * @brief Checks if the current quote is complete.
+             *
+             * @return true if quote is complete and ready for consumption, false otherwise
+             */
+            bool isComplete();
+
+            /**
+             * @brief Resets the completion flag to false.
+             *
+             * This method explicitly resets the completion flag, typically called
+             * when starting to receive a new quote.
+             */
+            void resetBuffer();
     };
 
 } // namespace e5
