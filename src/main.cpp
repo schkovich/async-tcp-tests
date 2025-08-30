@@ -10,6 +10,7 @@
  * - Core affinity management for non-thread-safe operations
  * - Asynchronous networking on a dual-core Raspberry Pi Pico
  */
+#include "QotdFinHandler.hpp"
 
 #include <lwip/tcpbase.h>
 #ifndef ESPHOSTSPI
@@ -22,13 +23,13 @@
 #include "ContextManager.hpp"
 #include "EchoConnectedHandler.hpp"
 #include "EchoReceivedHandler.hpp"
+#include "LoopScheduler.hpp"
 #include "QotdConnectedHandler.hpp"
 #include "QotdReceivedHandler.hpp"
 #include "QuoteBuffer.hpp"
 #include "SerialPrinter.hpp"
 #include "TcpClient.hpp"
 #include "TcpWriter.hpp"
-#include "LoopScheduler.hpp"
 #include "secrets.h" // Contains STASSID, STAPSK, QOTD_HOST, ECHO_HOST, QOTD_PORT, ECHO_PORT
 #include <WiFi.h>
 #include <algorithm>
@@ -89,9 +90,7 @@ static constexpr int8_t board_temperature = 5;
  * Reads the board temperature from internal temperature sensor
  * @return Temperature value in Celsius
  */
-float readBoardTemperature() {
-    return analogReadTemp();
-}
+float readBoardTemperature() { return analogReadTemp(); }
 
 /**
  * Formats temperature reading into a display string
@@ -111,15 +110,17 @@ std::string formatTemperatureMessage(const float temperature) {
  * Connects to the QOTD server if there isn't another active connection.
  */
 void get_quote_of_the_day() {
-    // Check if we're already connected first
     if (qotd_client.status() == CLOSED) {
-        if (!qotd_client.connect(qotd_ip_address, qotd_port)) {
-            DEBUGCORE("[ERROR] Failed to connect to QOTD server.\n");
+        if (const auto err = qotd_client.connect(qotd_ip_address, qotd_port);
+            err != PICO_OK) {
+            DEBUGCORE("[WARNING][:i%d] :err %d\n", qotd_client.getClientId(),
+                      err);
+            return;
         }
+        DEBUGCORE("[INFO][:i%d] connecting.\n", qotd_client.getClientId());
         return;
     }
-
-    DEBUGCORE("[DEBUG] QOTD client already connected, skipping.\n");
+    DEBUGCORE("[INFO][:i%d] skipping.\n", qotd_client.getClientId());
 }
 
 /**
@@ -129,13 +130,22 @@ void get_quote_of_the_day() {
  * connect. If connected and there is data in the transmission buffer.
  */
 void get_echo() {
-    const std::string buffer_content = qotd_buffer.get();
-    if (!buffer_content.empty()) {
-        if (echo_client.status() == CLOSED) {
-            if (0 == echo_client.connect(echo_ip_address, echo_port)) {
-                DEBUGCORE("[ERROR] Failed to connect to echo server..\n");
+    if (qotd_buffer.isComplete()) {
+        if (echo_client.status() != ESTABLISHED) {
+            if (const auto err =
+                    echo_client.connect(echo_ip_address, echo_port);
+                err != PICO_OK) {
+                DEBUGCORE("[WARNING][:i%d] :err %d\n",
+                          echo_client.getClientId(), err);
                 return;
             }
+        }
+
+        const std::string buffer_content = qotd_buffer.get();
+
+        if (buffer_content.empty()) {
+            DEBUGCORE("[INFO] No data to send to echo server.\n");
+            return;
         }
 
         if (const size_t error = echo_client.write(
@@ -185,8 +195,8 @@ void print_board_temperature() {
     // Read the board temperature
     const float temperature = readBoardTemperature();
     // Format the message
-    auto temperature_message = std::make_unique<std::string>(
-        formatTemperatureMessage(temperature));
+    auto temperature_message =
+        std::make_unique<std::string>(formatTemperatureMessage(temperature));
     // Print the message using SerialPrinter
     serial_printer.print(std::move(temperature_message));
 }
@@ -196,9 +206,11 @@ void print_board_temperature() {
  */
 void setup() {
     Serial.begin(); // baud rate is ignored for USB CDC
-    // Wait up to 1 second for Serial to become ready, but do not block indefinitely
+    // Wait up to 1 second for Serial to become ready, but do not block
+    // indefinitely.
     for (int i = 0; i < 100; ++i) {
-        if (Serial) break;
+        if (Serial)
+            break;
         delay(10);
     }
 
@@ -243,22 +255,28 @@ void setup() {
 
     auto echo_received_handler = std::make_unique<e5::EchoReceivedHandler>(
         ctx0, serial_printer, qotd_buffer);
-    echo_received_handler->initialiseBridge();;
+    echo_received_handler->initialiseBridge();
+    ;
     echo_client.setOnReceivedCallback(std::move(echo_received_handler));
 
     auto qotd_connected_handler = std::make_unique<e5::QotdConnectedHandler>(
         ctx0, qotd_client, serial_printer, qotd_buffer);
-        qotd_connected_handler->initialiseBridge();
+    qotd_connected_handler->initialiseBridge();
     qotd_client.setOnConnectedCallback(std::move(qotd_connected_handler));
 
-    auto qotd_received_handler = std::make_unique<e5::QotdReceivedHandler>(
-        ctx0, qotd_buffer);
+    auto qotd_received_handler =
+        std::make_unique<e5::QotdReceivedHandler>(ctx0, qotd_buffer);
     qotd_received_handler->initialiseBridge();
     qotd_client.setOnReceivedCallback(std::move(qotd_received_handler));
 
-    scheduler0.setEntry(qotd, 888);
-    scheduler0.setEntry(echo, 333);
-    scheduler0.setEntry(stack_0, 40404);
+    auto qotd_fin_handler =
+        std::make_unique<e5::QotdFinHandler>(ctx0, qotd_client, qotd_buffer);
+    qotd_fin_handler->initialiseBridge();
+    qotd_client.setOnFinCallback(std::move(qotd_fin_handler));
+
+    scheduler0.setEntry(qotd, 80808);
+    scheduler0.setEntry(echo, 30303);
+    scheduler0.setEntry(stack_0, 404040);
 
     pinMode(LED_BUILTIN, OUTPUT);
 
@@ -299,16 +317,24 @@ void loop() {
         return;
     }
 
-    if (scheduler0.timeToRun(qotd)) get_quote_of_the_day();
-    if (scheduler0.timeToRun(echo)) get_echo();
-    if (scheduler0.timeToRun(stack_0)) print_stack_stats();
+    if (scheduler0.timeToRun(qotd))
+        get_quote_of_the_day();
+
+    if (scheduler0.timeToRun(echo))
+        get_echo();
+
+    if (scheduler0.timeToRun(stack_0))
+        print_stack_stats();
 }
 
 /**
  * @brief Loop function for Core 1.
  */
 void loop1() {
-    if (scheduler1.timeToRun(stack_1)) print_stack_stats();
-    if (scheduler1.timeToRun(heap)) print_heap_stats();
-    if (scheduler1.timeToRun(board_temperature)) print_board_temperature();
+    if (scheduler1.timeToRun(stack_1))
+        print_stack_stats();
+    if (scheduler1.timeToRun(heap))
+        print_heap_stats();
+    if (scheduler1.timeToRun(board_temperature))
+        print_board_temperature();
 }

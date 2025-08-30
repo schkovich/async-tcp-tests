@@ -39,7 +39,7 @@ namespace e5 {
         quote->assign(data, available);
         quote->append("\n");
         m_serial_printer.print(std::move(quote));
-        m_rx_buffer->peekConsume(available);
+        m_rx_buffer->peekConsume(available + 1);
     }
 
 } // namespace e5

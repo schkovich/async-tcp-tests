@@ -39,10 +39,10 @@ namespace e5 {
      */
     class QotdReceivedHandler final : public PerpetualBridge {
             QuoteBuffer
-                &m_quote_buffer;  /**< Reference to the thread-safe buffer where
-                                     the quote will be stored. */
-            IoRxBuffer *m_rx_buffer = nullptr; /**< Pointer to the IO receive buffer
-                                                     associated with the TCP
+                &m_quote_buffer; /**< Reference to the thread-safe buffer where
+                                    the quote will be stored. */
+            IoRxBuffer *m_rx_buffer = nullptr; /**< Pointer to the IO receive b
+                                                  buffer associated with the TCP
                                                      client. */
 
         protected:
@@ -72,14 +72,13 @@ namespace e5 {
              * execute this handler
              * @param quote_buffer Reference to the thread-safe buffer where the
              * quote will be stored
-             * @param io Reference to the TCP client that received the data
              */
             QotdReceivedHandler(const AsyncCtx &ctx, QuoteBuffer &quote_buffer)
                 : PerpetualBridge(ctx), m_quote_buffer(quote_buffer) {}
 
             // Override the virtual workload for RxBuffer
             void workload(void *data) override {
-                m_rx_buffer = static_cast<IoRxBuffer*>(data);
+                m_rx_buffer = static_cast<IoRxBuffer *>(data);
             }
     };
 
