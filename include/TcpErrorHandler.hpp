@@ -17,8 +17,6 @@
 #include "PerpetualBridge.hpp"
 #include "TcpClient.hpp"
 #include <lwip/err.h>
-#include <memory>
-#include <string>
 
 namespace e5 {
 
@@ -34,9 +32,7 @@ namespace e5 {
      */
     class TcpErrorHandler final : public PerpetualBridge {
             TcpClient &m_io;                     ///< TCP client reference
-            std::unique_ptr<std::string> m_data; ///< Data that failed to write
-            size_t m_written;                    ///< Bytes written before error
-            err_t m_error;                       ///< Error code
+            err_t m_error = ERR_OK;             ///< Last error code delivered via workload
 
         protected:
             /**
@@ -53,15 +49,18 @@ namespace e5 {
              *
              * @param ctx Context manager for execution
              * @param io TCP client reference
-             * @param data Data that failed to write
-             * @param written Bytes written before error
-             * @param error Error code from TCP layer
              */
-            TcpErrorHandler(const AsyncCtx &ctx, TcpClient &io,
-                            std::unique_ptr<std::string> data,
-                            const size_t written, const err_t error)
-                : PerpetualBridge(ctx), m_io(io), m_data(std::move(data)),
-                  m_written(written), m_error(error) {}
+            TcpErrorHandler(const AsyncCtx &ctx, TcpClient &io)
+                : PerpetualBridge(ctx), m_io(io) {}
+
+            // Accept error code via EventBridge workload (mirrors EchoReceivedHandler pattern)
+            void workload(void *data) override {
+                if (data) {
+                    const auto *err_ptr = static_cast<err_t*>(data);
+                    m_error = *err_ptr;
+                    delete err_ptr; // take ownership and free payload
+                }
+            }
     };
 
 } // namespace e5

@@ -31,6 +31,7 @@
 #include "TcpClient.hpp"
 #include "TcpWriter.hpp"
 #include "TcpPollHandler.hpp"
+#include "TcpErrorHandler.hpp"
 #include "secrets.h" // Contains STASSID, STAPSK, QOTD_HOST, ECHO_HOST, QOTD_PORT, ECHO_PORT
 #include <WiFi.h>
 #include <algorithm>
@@ -264,6 +265,15 @@ void setup() {
     auto echo_poll_handler = std::make_unique<e5::TcpPollHandler>(ctx0, echo_client);
     echo_poll_handler->initialiseBridge();
     echo_client.setOnPollCallback(std::move(echo_poll_handler));
+
+    // Register error handlers for both clients (bridged to async context)
+    auto echo_error_handler = std::make_unique<e5::TcpErrorHandler>(ctx0, echo_client);
+    echo_error_handler->initialiseBridge();
+    echo_client.setOnErrorCallback(std::move(echo_error_handler));
+
+    auto qotd_error_handler = std::make_unique<e5::TcpErrorHandler>(ctx0, qotd_client);
+    qotd_error_handler->initialiseBridge();
+    qotd_client.setOnErrorCallback(std::move(qotd_error_handler));
 
     auto qotd_connected_handler = std::make_unique<e5::QotdConnectedHandler>(
         ctx0, qotd_client, serial_printer, qotd_buffer);
