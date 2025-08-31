@@ -47,6 +47,17 @@ The server perfectly tests your refactoring because:
 - **Single response pattern**: Tests connection close handling
 - **Real network conditions**: Tests async context timing
 
+### Client receive/FIN flow (QOTD)
+- The server sends the entire quote, then immediately closes the connection (FIN).
+- QotdReceivedHandler::onWork():
+  - Resets the quote buffer to start a fresh record
+  - Peeks and consumes up to the configured partial-consumption threshold
+  - Sets the first chunk in QuoteBuffer
+- QotdFinHandler::onWork():
+  - Drains remaining bytes from IoRxBuffer in threshold-sized chunks
+  - Appends to QuoteBuffer, marks the quote complete, resets the Rx buffer, and shuts down the connection
+- The partial-consumption threshold is centralized as `QOTD_PARTIAL_CONSUMPTION_THRESHOLD` (defined in `src/main.cpp`, declared in `include/QotdConfig.hpp`).
+
 ### Script Dependencies:
 - `curl` - for fetching quotes from API
 - `jq` - for JSON parsing
