@@ -11,6 +11,7 @@
  * - Asynchronous networking on a dual-core Raspberry Pi Pico
  */
 #include "QotdFinHandler.hpp"
+#include "QotdConfig.hpp"
 
 #include <lwip/tcpbase.h>
 #ifndef ESPHOSTSPI
@@ -39,6 +40,10 @@
 #include <cmath>
 
 using namespace async_tcp;
+
+// Global configuration values for QOTD test app
+const std::size_t QOTD_PARTIAL_CONSUMPTION_THRESHOLD = 88;
+
 /**
  * Allocate separate 8KB stack for core1
  *

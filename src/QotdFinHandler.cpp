@@ -16,6 +16,7 @@
 
 #include "QotdFinHandler.hpp"
 #include <Arduino.h>
+#include "QotdConfig.hpp"
 
 namespace e5 {
 
@@ -46,22 +47,21 @@ namespace e5 {
         DEBUGWIRE("[QOTD][FIN] draining %zu bytes\n", available);
         while (available > 0) {
             const size_t consume_size =
-                std::min(available, static_cast<size_t>(88));
+                std::min(available, QOTD_PARTIAL_CONSUMPTION_THRESHOLD);
             const char *peek_buffer = m_rx_buffer->peekBuffer();
             // Create string from the chunk to be consumed
             std::string quote_chunk(peek_buffer, consume_size);
 
-            while (!quote_chunk.empty() && quote_chunk.back() == '\0') {
-                quote_chunk.pop_back();
-            }
-
             m_quote_buffer.append(quote_chunk);
+            // ReSharper disable once CppDFANullDereference
+            m_rx_buffer->peekConsume(consume_size);
             available = available - consume_size;
         }
 
         // Quote is complete after draining all remaining data
         m_quote_buffer.setComplete();
         // Reset the buffer. Data drained.
+        // ReSharper disable once CppDFANullDereference
         m_rx_buffer->reset();
         m_io.shutdown();
         DEBUGWIRE("[QOTD] drained, quote complete, connection stopped: %d\n", m_io.status());

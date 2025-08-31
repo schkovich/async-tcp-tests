@@ -35,7 +35,6 @@ namespace e5 {
      */
     void QotdConnectedHandler::onWork() {
 
-        m_quote_buffer.resetBuffer();
         auto notify_connect = std::make_unique<std::string>(
             std::string("[INFO] Getting a quote from: ")
             + m_io.remoteIP().toString().c_str()

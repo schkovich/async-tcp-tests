@@ -52,7 +52,6 @@ namespace e5 {
 
         case BufferPayload::RESET_COMPLETE:
             m_quote_complete = false;
-            m_buffer.clear();
             return PICO_OK;
 
         case BufferPayload::IS_COMPLETE:
