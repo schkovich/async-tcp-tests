@@ -29,17 +29,22 @@ namespace e5 {
      * segments based on network conditions.
      */
     void EchoReceivedHandler::onWork() {
+        // ReSharper disable once CppDFANullDereference
         const size_t available = m_rx_buffer->peekAvailable();
-        if (available == 0) return;
+        if (available == 0)
+            return;
 
+        // ReSharper disable once CppDFANullDereference
         const char *data = m_rx_buffer->peekBuffer();
-        // Print any incoming echo data
+        // Print any incoming echo data (append newline only for SerialPrinter)
         auto quote = std::make_unique<std::string>();
         quote->reserve(available + 1);
         quote->assign(data, available);
         quote->append("\n");
         m_serial_printer.print(std::move(quote));
-        m_rx_buffer->peekConsume(available + 1);
+        // Consume exactly the bytes we received; IoRxBuffer frees head on exact consumption
+        // ReSharper disable once CppDFANullDereference
+        m_rx_buffer->peekConsume(available);
     }
 
 } // namespace e5
