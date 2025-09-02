@@ -30,7 +30,7 @@ To evaluate or build this project:
    pio device monitor
    ```
 
-   For instructions on using async-tcp in a new project, see the [async-tcp README](lib/async-tcp/README.md).
+   For more details on the async-tcp library, please take a look at the [README]([schkovich/async-tcp/README.md](https://github.com/schkovich/async-tcp/blob/master/README.md)).
 
 ## Project Structure
 
